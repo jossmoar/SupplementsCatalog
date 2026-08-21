@@ -1,0 +1,27 @@
+rules_version = '2';
+
+// Reglas de seguridad de Firestore.
+// Cambiá "jmonteroa1@ucenfotec.ac.cr" si el correo de administración cambia.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null &&
+        request.auth.token.email == 'jmonteroa1@ucenfotec.ac.cr';
+    }
+
+    // Productos: cualquiera puede leer (catálogo público),
+    // pero solo la cuenta admin puede crear/editar/borrar.
+    // Esto es lo que evita que un cliente manipule precios o stock.
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Perfil de usuario: cada quien solo puede leer/escribir el suyo.
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if isAdmin();
+    }
+  }
+}
