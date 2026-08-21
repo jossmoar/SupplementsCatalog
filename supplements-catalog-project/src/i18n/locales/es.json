@@ -1,0 +1,161 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "catalog": "Catálogo",
+    "cart": "Carrito",
+    "admin": "Admin",
+    "account": "Cuenta",
+    "logout": "Cerrar sesión",
+    "login": "Iniciar sesión",
+    "subtitle": "Suplementos",
+    "search": "Buscar"
+  },
+  "common": {
+    "loading": "Cargando…",
+    "back": "Atrás"
+  },
+  "productType": {
+    "proteinas": "Proteínas",
+    "creatinas": "Creatinas",
+    "vitaminas": "Vitaminas",
+    "colageno": "Colágeno",
+    "bienestar": "Bienestar",
+    "accesorios": "Accesorios"
+  },
+  "gender": {
+    "unisex": "Unisex",
+    "hombres": "Hombres",
+    "mujeres": "Mujeres",
+    "todos": "Todos"
+  },
+  "landing": {
+    "eyebrow": "Bienestar diario",
+    "title": "Suplementos bien pensados para ti.",
+    "titleLine1": "Suplementos",
+    "titleLine2": "bien pensados",
+    "titleLine3": "para ti",
+    "subtitle": "Fórmulas limpias, dosis honestas y todo lo que necesitas para sostener tu rutina — sin ruido ni promesas raras.",
+    "cta": "Ver catálogo",
+    "buildRitual": "Arma tu ritual",
+    "categories": "Categorías",
+    "searchPlaceholder": "Busca proteína, magnesio, colágeno…",
+    "bannerEyebrow": "Destacado",
+    "discover": "Descubrir",
+    "essentials": "Esenciales RM",
+    "viewAll": "Ver todo",
+    "add": "AGREGAR",
+    "routineEyebrow": "Tu rutina",
+    "routineTitle": "Arma tu ritual en 3 pasos",
+    "step1Title": "Base",
+    "step1Text": "Proteína y creatina para sostener tu entrenamiento.",
+    "step2Title": "Diario",
+    "step2Text": "Multivitamínico y omega 3, sin pensarlo.",
+    "step3Title": "Descanso",
+    "step3Text": "Magnesio en la noche para dormir mejor.",
+    "quote": "La salud es un estado de completa armonía entre el cuerpo, la mente y el espíritu.",
+    "quoteAuthor": "B.K.S. Iyengar"
+  },
+  "login": {
+    "welcomeBack": "Bienvenida de nuevo",
+    "createAccount": "Creá tu cuenta",
+    "signIn": "Iniciar sesión",
+    "signUp": "Registrarme",
+    "fullName": "Nombre completo",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "processing": "Procesando…",
+    "enter": "Entrar",
+    "createAccountBtn": "Crear cuenta",
+    "noAccount": "¿No tenés cuenta? Registrate",
+    "haveAccount": "¿Ya tenés cuenta? Iniciá sesión",
+    "error": "No se pudo completar. Revisá tus datos e intentá de nuevo."
+  },
+  "catalog": {
+    "title": "Catálogo",
+    "breadcrumb": "Inicio / Catálogo",
+    "category": "Categoría",
+    "gender": "Género",
+    "allCategories": "Todo",
+    "sortRecommended": "Ordenar: Recomendado",
+    "sortPriceAsc": "Precio: menor a mayor",
+    "sortPriceDesc": "Precio: mayor a menor",
+    "count": "{{count}} productos",
+    "countOne": "1 producto",
+    "loading": "Cargando productos…",
+    "empty": "No hay productos que coincidan con tu búsqueda todavía."
+  },
+  "product": {
+    "noPhoto": "Sin foto",
+    "benefits": "Beneficios",
+    "usage": "Modo de uso",
+    "presentation": "Presentación",
+    "added": "Agregado ✓",
+    "addToCart": "Agregar al carrito",
+    "outOfStock": "Producto agotado por el momento.",
+    "notFound": "No encontramos este producto",
+    "combinesWith": "Combina bien con"
+  },
+  "cart": {
+    "title": "Tu carrito",
+    "count": "{{count}} productos",
+    "countOne": "1 producto",
+    "remove": "Quitar",
+    "total": "Total",
+    "verifying": "Verificando pedido…",
+    "sendOrder": "Enviar pedido por WhatsApp",
+    "whatsappHint": "Se abrirá WhatsApp con el detalle de tu pedido para coordinar el pago y el envío.",
+    "error": "No se pudo verificar el pedido. Intentá de nuevo en un momento.",
+    "empty": "Tu carrito está vacío",
+    "emptyHint": "Explorá el catálogo y agregá los productos que más te gusten."
+  },
+  "account": {
+    "eyebrow": "Mi cuenta",
+    "title": "Tu información",
+    "name": "Nombre",
+    "phone": "Teléfono",
+    "address": "Dirección de envío",
+    "saved": "Guardado ✓",
+    "save": "Guardar cambios"
+  },
+  "admin": {
+    "eyebrow": "Panel de administración",
+    "title": "Gestionar productos",
+    "namePlaceholder": "Nombre del producto",
+    "pricePlaceholder": "Precio (CRC)",
+    "presentationPlaceholder": "Presentación (ej. 2 lb, 60 cápsulas)",
+    "stockPlaceholder": "Stock disponible",
+    "benefitsPlaceholder": "Beneficios principales (uno por línea)",
+    "usagePlaceholder": "Modo de uso",
+    "photoLabel": "Foto del producto",
+    "showRecommended": "Mostrar en \"Recomendados\"",
+    "saving": "Guardando…",
+    "update": "Actualizar producto",
+    "addProduct": "Agregar producto",
+    "cancelEdit": "Cancelar edición",
+    "currentProducts": "Productos actuales ({{count}})",
+    "stock": "Stock",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "confirmDelete": "¿Eliminar este producto?",
+    "saveError": "No se pudo guardar el producto. Revisá la conexión y probá de nuevo."
+  },
+  "footer": {
+    "tagline": "Bienestar, salud y confianza — hecho con cuidado."
+  },
+  "search": {
+    "placeholder": "Buscar en RM",
+    "cancel": "Cancelar",
+    "suggestions": "Sugerencias",
+    "popular": "Populares esta semana",
+    "results": "{{count}} resultados",
+    "oneResult": "1 resultado",
+    "empty": "Nada por aquí",
+    "emptyHint": "Prueba con \"proteína\", \"sueño\" o \"piel\"."
+  },
+  "whatsapp": {
+    "greeting": "¡Hola! Soy {{name}} y quiero hacer este pedido:",
+    "defaultName": "un cliente",
+    "total": "Total: {{total}}",
+    "closing": "Quedo atento/a para coordinar el pago y el envío. ¡Gracias!"
+  }
+}

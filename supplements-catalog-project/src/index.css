@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  /* Paleta RM: negro cálido para acción, blanco cálido y beige de fondo, oliva y taupe solo como detalle */
+  --color-cream: #fbf9f6;
+  --color-beige: #eae3d9;
+  --color-beige-dark: rgba(20, 18, 15, 0.16);
+  --color-ink: #14120f;
+  --color-taupe: #8b7a6a;
+  --color-taupe-light: rgba(20, 18, 15, 0.55);
+  --color-olive: #6e7551;
+  --color-olive-dark: #565c40;
+  --color-hairline: rgba(20, 18, 15, 0.08);
+
+  --font-sans: "Jost", system-ui, sans-serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cream text-ink font-sans antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-serif tracking-normal;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xs bg-ink px-6 py-3 text-xs font-medium tracking-widest text-cream uppercase transition-opacity hover:opacity-90;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xs border border-beige-dark px-6 py-3 text-xs font-medium tracking-widest text-ink uppercase transition-colors hover:bg-ink hover:text-cream;
+  }
+  .input-field {
+    @apply w-full rounded-xs border border-beige-dark bg-cream px-4 py-3 text-sm text-ink placeholder:text-taupe focus:border-ink focus:outline-none;
+  }
+  .section-title {
+    @apply font-serif text-3xl text-ink md:text-4xl;
+  }
+  .eyebrow {
+    @apply text-[10px] tracking-[0.2em] text-taupe uppercase;
+  }
+  .chip {
+    @apply rounded-full border border-beige-dark px-4 py-2 text-xs tracking-wide text-ink transition-colors;
+  }
+  .chip-active {
+    @apply border-ink bg-ink text-cream;
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
