@@ -1,7 +1,7 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useProducts } from '../hooks/useProducts'
-import { ProductCard } from '../components/ProductCard'
 import { money } from '../utils/whatsapp'
 import { PRODUCT_TYPE_LABELS, type ProductType } from '../types/product'
 
@@ -22,10 +22,21 @@ export function Landing() {
   const essentials = products.filter((p) => p.recommended).slice(0, 6)
   const featured = essentials.length > 0 ? essentials : products.slice(0, 6)
 
+  const heroImages = featured.map((p) => p.images[0]).filter(Boolean) as string[]
+  const [heroIndex, setHeroIndex] = useState(0)
+
+  useEffect(() => {
+    if (heroImages.length < 2) return
+    const id = setInterval(() => {
+      setHeroIndex((i) => (i + 1) % heroImages.length)
+    }, 4000)
+    return () => clearInterval(id)
+  }, [heroImages.length])
+
   const steps = [1, 2, 3] as const
 
   return (
-    <div className="bg-beige pb-6">
+    <div className="bg-beige ">
       <section className="px-5 pt-4.5 md:hidden" data-aos="fade-up">
         <Link
           to="/buscar"
@@ -75,14 +86,14 @@ export function Landing() {
       )}
 
       {featured.length > 0 && (
-        <section className="pt-7.5">
-          <div className="flex items-baseline justify-between px-5 md:hidden">
+        <section className="pt-7.5 md:hidden">
+          <div className="flex items-baseline justify-between px-5">
             <span className="font-serif text-[23px] text-ink">{t('landing.essentials')}</span>
             <Link to="/catalogo" className="text-[11px] tracking-wide text-taupe uppercase">
               {t('landing.viewAll')}
             </Link>
           </div>
-          <div className="scrollbar-none flex gap-3.5 overflow-x-auto px-5 pt-4 pb-1.5 md:hidden">
+          <div className="scrollbar-none flex gap-3.5 overflow-x-auto px-5 pt-4 pb-1.5">
             {featured.map((p, i) => (
               <div key={p.id} className="w-43.5 flex-none" data-aos="fade-up" data-aos-delay={i * 60}>
                 <div className="flex flex-col gap-2.5 bg-cream p-3">
@@ -104,14 +115,6 @@ export function Landing() {
               </div>
             ))}
           </div>
-
-          <div className="hidden max-w-[1440px] px-14 pt-4 md:mx-auto md:block">
-            <div className="grid grid-cols-4 gap-7">
-              {featured.slice(0, 4).map((p, i) => (
-                <ProductCard key={p.id} product={p} aosDelay={i * 60} />
-              ))}
-            </div>
-          </div>
         </section>
       )}
 
@@ -131,10 +134,35 @@ export function Landing() {
         </div>
       </section>
 
-      {/* Desktop-only hero + editorial sections */}
-      <section className="hidden bg-cream md:block">
-        <div className="mx-auto grid max-w-[1440px] grid-cols-2 px-14" style={{ minHeight: 440 }}>
-          <div className="flex flex-col justify-center py-19.5 w-[40%]">
+      {/* Desktop-only: Categorías first */}
+      <section className="hidden bg-beige pt-14 pb-16 md:block">
+        <div className="mx-auto max-w-360 px-14">
+          <h2 className="font-serif text-sm tracking-widest text-taupe uppercase" data-aos="fade-up">
+            {t('landing.categories')}
+          </h2>
+          <div className="mt-7 grid grid-cols-6 gap-5">
+            {(Object.keys(PRODUCT_TYPE_LABELS) as ProductType[]).map((type, i) => (
+              <Link
+                key={type}
+                to={`/catalogo?tipo=${type}`}
+                className="flex flex-col gap-3"
+                data-aos="fade-up"
+                data-aos-delay={i * 60}
+              >
+                <div className="aspect-square overflow-hidden bg-beige">
+                  <img src={CATEGORY_IMAGES[type]} alt={t(`productType.${type}`)} className="h-full w-full object-cover" />
+                </div>
+                <span className="text-[13px] text-ink">{t(`productType.${type}`)}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Desktop-only hero */}
+      <section className="hidden bg-[#A78872]/70 md:block">
+        <div className="mx-auto grid max-w-[1340px] grid-cols-2 px-14" style={{ minHeight: 440 }}>
+          <div className="flex flex-col justify-center py-19.5">
             <span className="text-[10.5px] tracking-[0.22em] text-taupe uppercase" data-aos="fade-up">
               {t('landing.eyebrow')}
             </span>
@@ -161,38 +189,29 @@ export function Landing() {
               </a>
             </div>
           </div>
-          <div className="bg-beige">
-            {banner?.images[0] && (
-              <img src={banner.images[0]} alt="" className="h-full w-full object-cover" />
+          <div className="relative overflow-hidden bg-beige">
+            {heroImages.length > 0 ? (
+              heroImages.map((src, i) => (
+                <img
+                  key={src + i}
+                  src={src}
+                  alt=""
+                  className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+                    i === heroIndex ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
+              ))
+            ) : (
+              banner?.images[0] && (
+                <img src={banner.images[0]} alt="" className="h-full w-full object-cover" />
+              )
             )}
           </div>
         </div>
       </section>
 
-      <section className="hidden bg-cream pb-16 md:block">
-        <div className="mx-auto max-w-[1440px] px-14 pt-14">
-          <h2 className="font-serif text-sm tracking-widest text-taupe uppercase" data-aos="fade-up">
-            {t('landing.categories')}
-          </h2>
-          <div className="mt-7 grid grid-cols-6 gap-5">
-            {(Object.keys(PRODUCT_TYPE_LABELS) as ProductType[]).map((type, i) => (
-              <Link
-                key={type}
-                to={`/catalogo?tipo=${type}`}
-                className="flex flex-col gap-3"
-                data-aos="fade-up"
-                data-aos-delay={i * 60}
-              >
-                <div className="aspect-square overflow-hidden bg-beige">
-                  <img src={CATEGORY_IMAGES[type]} alt={t(`productType.${type}`)} className="h-full w-full object-cover" />
-                </div>
-                <span className="text-[13px] text-ink">{t(`productType.${type}`)}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        <div id="ritual" className="mt-18 grid grid-cols-2 scroll-mt-24 bg-beige" data-aos="fade-up">
+      <section className="hidden bg-cream md:block">
+        <div id="ritual" className="grid grid-cols-2 scroll-mt-24 bg-beige" data-aos="fade-up">
           <div className="min-h-95 overflow-hidden">
             <img
               src={CATEGORY_IMAGES.bienestar}

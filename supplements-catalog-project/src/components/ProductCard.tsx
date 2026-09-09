@@ -12,11 +12,12 @@ interface Props {
 
 export function ProductCard({ product, aosDelay = 0 }: Props) {
   const { t } = useTranslation()
-  const { addItem } = useCart()
+  const { items, addItem, setQuantity } = useCart()
   const { user } = useAuth()
   const navigate = useNavigate()
 
   const teaser = product.benefits[0] ?? product.presentation
+  const quantity = items.find((i) => i.productId === product.id)?.quantity ?? 0
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -25,6 +26,11 @@ export function ProductCard({ product, aosDelay = 0 }: Props) {
       return
     }
     addItem(product, 1)
+  }
+
+  const handleStep = (e: React.MouseEvent, delta: number) => {
+    e.preventDefault()
+    setQuantity(product.id, quantity + delta)
   }
 
   return (
@@ -42,13 +48,33 @@ export function ProductCard({ product, aosDelay = 0 }: Props) {
             {t('product.noPhoto')}
           </div>
         )}
-        <button
-          onClick={handleAdd}
-          aria-label={t('product.addToCart')}
-          className="absolute right-2 bottom-2 flex h-7.5 w-7.5 items-center justify-center rounded-full bg-cream text-base text-ink"
-        >
-          +
-        </button>
+        {quantity > 0 ? (
+          <div className="absolute right-2 bottom-2 flex items-center gap-1.5 rounded-full bg-cream px-1 py-1">
+            <button
+              onClick={(e) => handleStep(e, -1)}
+              aria-label={t('cart.remove')}
+              className="flex h-6.5 w-6.5 items-center justify-center rounded-full text-sm text-ink"
+            >
+              −
+            </button>
+            <span className="min-w-3.5 text-center text-xs text-ink">{quantity}</span>
+            <button
+              onClick={(e) => handleStep(e, 1)}
+              aria-label={t('product.addToCart')}
+              className="flex h-6.5 w-6.5 items-center justify-center rounded-full text-sm text-ink"
+            >
+              +
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={handleAdd}
+            aria-label={t('product.addToCart')}
+            className="absolute right-2 bottom-2 flex h-7.5 w-7.5 items-center justify-center rounded-full bg-cream text-base text-ink"
+          >
+            +
+          </button>
+        )}
       </div>
       <p className="text-[12.5px] leading-snug text-ink">{product.name}</p>
       {teaser && <p className="text-[11px] text-olive">{teaser}</p>}
