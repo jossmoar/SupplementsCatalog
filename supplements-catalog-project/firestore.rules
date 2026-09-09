@@ -1,13 +1,16 @@
 rules_version = '2';
 
 // Reglas de seguridad de Firestore.
-// Cambiá "jmonteroa1@ucenfotec.ac.cr" si el correo de administración cambia.
+// Agregá o quitá correos de esta lista si cambian las cuentas de administración.
 service cloud.firestore {
   match /databases/{database}/documents {
 
     function isAdmin() {
       return request.auth != null &&
-        request.auth.token.email == 'jmonteroa1@ucenfotec.ac.cr';
+        request.auth.token.email in [
+          'jmonteroa1@ucenfotec.com',
+          'jmonteroa1@ucenfotec.ac.cr'
+        ];
     }
 
     // Productos: cualquiera puede leer (catálogo público),

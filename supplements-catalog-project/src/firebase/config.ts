@@ -18,9 +18,15 @@ export const app = initializeApp(firebaseConfig)
 export const auth = getAuth(app)
 export const db = getFirestore(app)
 
-// Correo del panel de administración (solo esta cuenta ve /admin).
-export const ADMIN_EMAIL =
-  import.meta.env.VITE_ADMIN_EMAIL ?? 'jmonteroa1@ucenfotec.ac.cr'
+// Correos del panel de administración (solo estas cuentas ven /admin).
+// Se admite una lista separada por comas en VITE_ADMIN_EMAIL.
+export const ADMIN_EMAILS = (
+  import.meta.env.VITE_ADMIN_EMAIL ??
+  'jmonteroa1@ucenfotec.com,jmonteroa1@ucenfotec.ac.cr'
+)
+  .split(',')
+  .map((email: string) => email.trim().toLowerCase())
+  .filter(Boolean)
 
 // Número de WhatsApp al que se envían los pedidos (formato wa.me, sin "+").
 export const WHATSAPP_NUMBER =

@@ -14,7 +14,7 @@ import {
   type User,
 } from 'firebase/auth'
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
-import { auth, db, ADMIN_EMAIL } from '../firebase/config'
+import { auth, db, ADMIN_EMAILS } from '../firebase/config'
 
 export interface UserProfile {
   name: string
@@ -95,7 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setProfile((prev) => (prev ? { ...prev, ...data } : prev))
   }
 
-  const isAdmin = !!user?.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()
+  const isAdmin = !!user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase())
 
   return (
     <AuthContext.Provider
