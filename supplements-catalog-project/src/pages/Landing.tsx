@@ -4,15 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useProducts } from '../hooks/useProducts'
 import { money } from '../utils/whatsapp'
 import { PRODUCT_TYPE_LABELS, type ProductType } from '../types/product'
-
-const CATEGORY_IMAGES: Record<ProductType, string> = {
-  proteinas: 'https://images.unsplash.com/photo-1579722820258-58a08e14ba17?q=80&w=600&auto=format&fit=crop',
-  creatinas: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=600&auto=format&fit=crop',
-  vitaminas: 'https://images.unsplash.com/photo-1550572017-edd951b55104?q=80&w=600&auto=format&fit=crop',
-  colageno: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=600&auto=format&fit=crop',
-  bienestar: 'https://images.unsplash.com/photo-1519824145371-296894a0daa9?q=80&w=600&auto=format&fit=crop',
-  accesorios: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=600&auto=format&fit=crop',
-}
+import { CategoryRail } from '../components/CategoryRail'
 
 export function Landing() {
   const { t } = useTranslation()
@@ -22,16 +14,21 @@ export function Landing() {
   const essentials = products.filter((p) => p.recommended).slice(0, 6)
   const featured = essentials.length > 0 ? essentials : products.slice(0, 6)
 
-  const heroImages = featured.map((p) => p.images[0]).filter(Boolean) as string[]
+  const heroSlides = (featured.length > 0 ? featured : banner ? [banner] : []).filter((p) => p.images[0])
   const [heroIndex, setHeroIndex] = useState(0)
 
   useEffect(() => {
-    if (heroImages.length < 2) return
+    if (heroSlides.length < 2) return
     const id = setInterval(() => {
-      setHeroIndex((i) => (i + 1) % heroImages.length)
+      setHeroIndex((i) => (i + 1) % heroSlides.length)
     }, 4000)
     return () => clearInterval(id)
-  }, [heroImages.length])
+  }, [heroSlides.length])
+
+  const heroProduct = heroSlides[heroIndex] ?? banner
+  const heroCaption = heroProduct
+    ? [heroProduct.name, heroProduct.presentation].filter(Boolean).join(' · ')
+    : ''
 
   const steps = [1, 2, 3] as const
 
@@ -135,107 +132,182 @@ export function Landing() {
       </section>
 
       {/* Desktop-only: Categorías first */}
-      <section className="hidden bg-beige pt-14 pb-16 md:block">
-        <div className="mx-auto max-w-360 px-14">
-          <h2 className="font-serif text-sm tracking-widest text-taupe uppercase" data-aos="fade-up">
-            {t('landing.categories')}
-          </h2>
-          <div className="mt-7 grid grid-cols-6 gap-5">
-            {(Object.keys(PRODUCT_TYPE_LABELS) as ProductType[]).map((type, i) => (
-              <Link
-                key={type}
-                to={`/catalogo?tipo=${type}`}
-                className="flex flex-col gap-3"
-                data-aos="fade-up"
-                data-aos-delay={i * 60}
-              >
-                <div className="aspect-square overflow-hidden bg-beige">
-                  <img src={CATEGORY_IMAGES[type]} alt={t(`productType.${type}`)} className="h-full w-full object-cover" />
-                </div>
-                <span className="text-[13px] text-ink">{t(`productType.${type}`)}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
+      <section className="hidden pt-11 pb-12 md:block" style={{ background: '#EFE7DC' }}>
+        <CategoryRail products={products} />
       </section>
 
       {/* Desktop-only hero */}
-      <section className="hidden bg-[#A78872]/70 md:block">
-        <div className="mx-auto grid max-w-[1340px] grid-cols-2 px-14" style={{ minHeight: 440 }}>
-          <div className="flex flex-col justify-center py-19.5">
-            <span className="text-[10.5px] tracking-[0.22em] text-taupe uppercase" data-aos="fade-up">
+      {/* Desktop-only hero — Hero B: una sola superficie tan, sin costura 50/50 */}
+      <section className="hidden md:block" style={{ background: '#BBA391' }}>
+        <div
+          className="mx-auto grid items-center"
+          style={{
+            maxWidth: 1120,
+            gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 400px)',
+            gap: 88,
+            padding: '104px 40px 112px',
+          }}
+        >
+          <div style={{ maxWidth: 620 }}>
+            <span
+              className="block uppercase"
+              style={{ fontSize: 12, letterSpacing: '.28em', color: '#6B5C55', marginBottom: 26 }}
+              data-aos="fade-up"
+            >
               {t('landing.eyebrow')}
             </span>
             <h1
-              className="mt-4.5 max-w-lg font-serif text-[44px] leading-[1.04] text-ink"
+              className="font-serif"
+              style={{ fontWeight: 400, fontSize: 54, lineHeight: 1.1, color: '#141833', margin: '0 0 26px' }}
               data-aos="fade-up"
               data-aos-delay="100"
             >
               {t('landing.titleLine1')}
               <br />
-              <span className="text-olive italic">{t('landing.titleLine2')}</span>
+              <em style={{ color: '#5C6540', fontStyle: 'italic' }}>{t('landing.titleLine2')}</em>
               <br />
               {t('landing.titleLine3')}
             </h1>
-            <p className="mt-5 max-w-sm text-[15px] leading-[1.65] text-ink/60" data-aos="fade-up" data-aos-delay="200">
+            <p
+              style={{ fontSize: 16, lineHeight: 1.75, color: '#4A4640', maxWidth: 420, margin: '0 0 40px' }}
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
               {t('landing.subtitle')}
             </p>
-            <div className="mt-8 flex gap-3" data-aos="fade-up" data-aos-delay="300">
-              <Link to="/catalogo" className="btn-primary text-[13.5px] font-normal tracking-normal normal-case">
+            <div className="flex" style={{ gap: 14 }} data-aos="fade-up" data-aos-delay="300">
+              <Link
+                to="/catalogo"
+                style={{ background: '#141833', color: '#F7F4EE', padding: '11px 34px', fontSize: 15, borderRadius: 4 }}
+              >
                 {t('landing.cta')}
               </Link>
-              <a href="#ritual" className="btn-secondary text-[13.5px] font-normal tracking-normal normal-case">
+              <a
+                href="#ritual"
+                style={{
+                  border: '1px solid rgba(20,24,51,.35)',
+                  padding: '11px 34px',
+                  fontSize: 15,
+                  color: '#141833',
+                  borderRadius: 4,
+                }}
+              >
                 {t('landing.buildRitual')}
               </a>
             </div>
           </div>
-          <div className="relative overflow-hidden bg-beige">
-            {heroImages.length > 0 ? (
-              heroImages.map((src, i) => (
-                <img
-                  key={src + i}
-                  src={src}
-                  alt=""
-                  className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
-                    i === heroIndex ? 'opacity-100' : 'opacity-0'
-                  }`}
-                />
-              ))
-            ) : (
-              banner?.images[0] && (
-                <img src={banner.images[0]} alt="" className="h-full w-full object-cover" />
-              )
+
+          <div className="relative" data-aos="fade-up" data-aos-delay="150">
+            <div
+              className="absolute"
+              style={{ left: -54, top: -40, width: 250, height: 250, borderRadius: '50%', background: 'rgba(250,248,244,.20)' }}
+            />
+            <div
+              className="absolute"
+              style={{
+                right: -70,
+                bottom: -56,
+                width: 150,
+                height: 150,
+                borderRadius: '50%',
+                border: '1px solid rgba(250,248,244,.35)',
+              }}
+            />
+            {heroSlides.length > 0 && (
+              <div
+                className="relative block w-full overflow-hidden"
+                style={{
+                  aspectRatio: '4 / 5',
+                  borderRadius: '250px 250px 16px 16px',
+                  boxShadow: '0 40px 72px -30px rgba(20,24,51,.55)',
+                }}
+              >
+                {heroSlides.map((p, i) => (
+                  <img
+                    key={p.id}
+                    src={p.images[0]}
+                    alt=""
+                    className="absolute inset-0 h-full w-full transition-opacity duration-700"
+                    style={{
+                      objectFit: 'cover',
+                      objectPosition: 'center 45%',
+                      opacity: i === heroIndex ? 1 : 0,
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+            {heroCaption && (
+              <div
+                className="relative flex items-start"
+                style={{ marginTop: 22, gap: 12, fontSize: 13, letterSpacing: '.06em', color: '#4A4640', minHeight: 40 }}
+              >
+                <span style={{ width: 26, height: 1, marginTop: 9, flexShrink: 0, background: 'rgba(20,24,51,.35)' }} />
+                <span
+                  style={{
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {heroCaption}
+                </span>
+              </div>
             )}
           </div>
         </div>
       </section>
 
-      <section className="hidden bg-cream md:block">
-        <div id="ritual" className="grid grid-cols-2 scroll-mt-24 bg-beige" data-aos="fade-up">
-          <div className="min-h-95 overflow-hidden">
-            <img
-              src={CATEGORY_IMAGES.bienestar}
-              alt=""
-              className="h-full w-full object-cover"
-            />
-          </div>
-          <div className="flex flex-col justify-center px-14 py-16">
-            <span className="text-[10.5px] tracking-[0.22em] text-taupe uppercase">{t('landing.routineEyebrow')}</span>
-            <p className="mt-3.5 font-serif text-[38px] leading-[1.15] text-ink">{t('landing.routineTitle')}</p>
-            <div className="mt-6.5">
-              {steps.map((n) => (
-                <div key={n} className="flex gap-5 border-t border-hairline-strong py-4.5">
-                  <span className="w-6 font-serif text-[22px] text-olive">{n}</span>
-                  <div className="flex-1">
-                    <p className="text-[15px] text-ink">{t(`landing.step${n}Title`)}</p>
-                    <p className="mt-1.5 text-[13px] leading-[1.55] text-ink/58">{t(`landing.step${n}Text`)}</p>
-                  </div>
-                </div>
-              ))}
+      {/* Desktop-only rutina — 3 columnas horizontales, sin imagen */}
+      <section id="ritual" className="hidden scroll-mt-24 md:block" style={{ background: '#EAE3D9' }}>
+        <div style={{ maxWidth: 1120, margin: '0 auto', padding: '72px 40px 80px' }}>
+          <div
+            className="flex items-end justify-between"
+            style={{ gap: 40, marginBottom: 24 }}
+            data-aos="fade-up"
+          >
+            <div>
+              <span
+                className="block uppercase"
+                style={{ fontSize: 12, letterSpacing: '.28em', color: '#95847D', marginBottom: 20 }}
+              >
+                {t('landing.routineEyebrow')}
+              </span>
+              <h2 className="font-serif" style={{ fontWeight: 400, fontSize: 44, color: '#141833', margin: 0 }}>
+                {t('landing.routineTitle')}
+              </h2>
             </div>
+            <Link
+              to="/catalogo"
+              style={{ fontSize: 15, color: '#141833', borderBottom: '1px solid rgba(20,24,51,.4)', paddingBottom: 5 }}
+            >
+              {t('landing.start')}
+            </Link>
+          </div>
+
+          <div className="grid" style={{ gridTemplateColumns: 'repeat(3, minmax(0,1fr))', gap: 60 }}>
+            {steps.map((n, i) => (
+              <div
+                key={n}
+                style={{ borderTop: '1px solid rgba(20,24,51,.2)', paddingTop: 24 }}
+                data-aos="fade-up"
+                data-aos-delay={i * 80}
+              >
+                <div className="font-serif" style={{ fontSize: 24, color: '#95847D', marginBottom: 2 }}>
+                  {n}
+                </div>
+                <div style={{ fontSize: 19, marginBottom: 2, color: '#141833' }}>{t(`landing.step${n}Title`)}</div>
+                <div style={{ fontSize: 15, fontWeight: 300, lineHeight: 1.65, color: '#5D6472' }}>
+                  {t(`landing.step${n}Text`)}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
+      </section>
 
+      <section className="hidden bg-cream md:block">
         <div className="px-14 py-18 text-center" data-aos="fade-up">
           <p className="mx-auto max-w-xl font-serif text-[32px] leading-[1.3] text-ink italic">
             {t('landing.quote')}

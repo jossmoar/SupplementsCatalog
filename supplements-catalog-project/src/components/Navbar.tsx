@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { useCart } from '../context/CartContext'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { PRODUCT_TYPE_LABELS, type ProductType } from '../types/product'
+import logoAmaru from '../assets/logo-amaru.png'
 
 export function Navbar() {
   const { t } = useTranslation()
@@ -16,8 +17,8 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-hairline bg-cream/95 backdrop-blur">
       <div className="mx-auto flex max-w-[1440px] items-center justify-between px-5 py-3 lg:px-14 lg:py-5">
-        <Link to="/" className="flex flex-col leading-none">
-          <span className="font-sans text-lg font-medium tracking-[0.3em] text-ink">RM</span>
+        <Link to="/" className="flex flex-col items-start leading-none">
+          <img src={logoAmaru} alt="RM" className="h-7 w-auto md:h-8" />
           <span className="mt-0.5 block text-[9px] tracking-[0.18em] text-taupe uppercase md:hidden">
             {t('nav.subtitle')}
           </span>
@@ -28,7 +29,7 @@ export function Navbar() {
             <Link
               key={c}
               to={`/catalogo?tipo=${c}`}
-              className="text-[13px] text-ink transition-opacity hover:opacity-55"
+              className="text-[15px] text-ink transition-opacity hover:opacity-55"
             >
               {t(`productType.${c}`)}
             </Link>
@@ -100,7 +101,20 @@ export function Navbar() {
               <path d="M9 8V6a3 3 0 0 1 6 0v2" />
             </svg>
             {count > 0 && (
-              <span className="absolute -top-1.5 -right-2 flex h-3.75 min-w-3.75 items-center justify-center rounded-full bg-olive px-1 text-[9.5px] text-white">
+              <span
+                className="absolute flex items-center justify-center"
+                style={{
+                  top: -5,
+                  right: -5,
+                  minWidth: 19,
+                  height: 19,
+                  borderRadius: 10,
+                  background: '#6E7551',
+                  color: '#FAF8F4',
+                  fontSize: 11,
+                  padding: '0 5px',
+                }}
+              >
                 {count}
               </span>
             )}

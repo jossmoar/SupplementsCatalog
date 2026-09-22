@@ -6,11 +6,14 @@ import {
   type ReactNode,
 } from 'react'
 import {
+  confirmPasswordReset,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
+  verifyPasswordResetCode,
   type User,
 } from 'firebase/auth'
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
@@ -30,6 +33,9 @@ interface AuthContextValue {
   login: (email: string, password: string) => Promise<void>
   signup: (name: string, email: string, password: string) => Promise<void>
   logout: () => Promise<void>
+  resetPassword: (email: string) => Promise<void>
+  verifyResetCode: (code: string) => Promise<string>
+  confirmReset: (code: string, newPassword: string) => Promise<void>
   updateUserProfile: (data: Partial<UserProfile>) => Promise<void>
 }
 
@@ -89,6 +95,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await signOut(auth)
   }
 
+  const resetPassword = async (email: string) => {
+    await sendPasswordResetEmail(auth, email, {
+      url: `${window.location.origin}/reset-password`,
+    })
+  }
+
+  const verifyResetCode = (code: string) => verifyPasswordResetCode(auth, code)
+
+  const confirmReset = (code: string, newPassword: string) =>
+    confirmPasswordReset(auth, code, newPassword)
+
   const updateUserProfile = async (data: Partial<UserProfile>) => {
     if (!user) return
     await updateDoc(doc(db, 'users', user.uid), data)
@@ -99,7 +116,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, profile, loading, isAdmin, login, signup, logout, updateUserProfile }}
+      value={{
+        user,
+        profile,
+        loading,
+        isAdmin,
+        login,
+        signup,
+        logout,
+        resetPassword,
+        verifyResetCode,
+        confirmReset,
+        updateUserProfile,
+      }}
     >
       {children}
     </AuthContext.Provider>

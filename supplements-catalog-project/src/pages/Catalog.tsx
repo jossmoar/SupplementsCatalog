@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useProducts } from '../hooks/useProducts'
 import { ProductCard } from '../components/ProductCard'
+import { ProductCircleCard } from '../components/ProductCircleCard'
 import { PRODUCT_TYPE_LABELS, type Gender, type ProductType } from '../types/product'
 
 const GENDER_TABS: Array<Gender | 'todos'> = ['todos', 'unisex', 'hombres', 'mujeres']
@@ -165,10 +166,17 @@ export function Catalog() {
           </div>
 
           <div>
-            <div className="flex items-center justify-between border-b border-hairline pb-4.5">
-              <span className="text-[12.5px] text-taupe">
-                {t(filtered.length === 1 ? 'catalog.countOne' : 'catalog.count', { count: filtered.length })}
-              </span>
+            <div
+              className="flex items-center justify-between"
+              style={{
+                fontSize: 14,
+                color: '#5D6472',
+                paddingBottom: 22,
+                borderBottom: '1px solid rgba(20,24,51,.12)',
+                marginBottom: 48,
+              }}
+            >
+              <span>{t(filtered.length === 1 ? 'catalog.countOne' : 'catalog.count', { count: filtered.length })}</span>
               {sortSelect}
             </div>
 
@@ -177,9 +185,12 @@ export function Catalog() {
             ) : filtered.length === 0 ? (
               <p className="mt-16 text-center text-taupe">{t('catalog.empty')}</p>
             ) : (
-              <div className="mt-7 grid grid-cols-3 gap-x-6.5 gap-y-8">
+              <div
+                className="grid"
+                style={{ gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '84px 52px' }}
+              >
                 {filtered.map((p, i) => (
-                  <ProductCard key={p.id} product={p} aosDelay={(i % 3) * 60} />
+                  <ProductCircleCard key={p.id} product={p} aosDelay={(i % 3) * 60} />
                 ))}
               </div>
             )}

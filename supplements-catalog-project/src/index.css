@@ -56,4 +56,89 @@
   .scrollbar-none::-webkit-scrollbar {
     display: none;
   }
+
+  /* Ficha de producto — capas decorativas del panel de imagen */
+  @keyframes rmspin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes rmspin2 {
+    to {
+      transform: rotate(-360deg);
+    }
+  }
+  @keyframes rmfloat {
+    0%,
+    100% {
+      transform: translateY(-14px);
+    }
+    50% {
+      transform: translateY(14px);
+    }
+  }
+  .pdp-spin {
+    animation: rmspin 42s linear infinite;
+  }
+  .pdp-spin-rev {
+    animation: rmspin2 56s linear infinite;
+  }
+  .pdp-float {
+    animation: rmfloat 9s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pdp-spin,
+    .pdp-spin-rev,
+    .pdp-float {
+      animation: none;
+    }
+  }
+
+  /* Footer Amaru — botones de contacto y link telefónico */
+  .footer-pill {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 7px 14px;
+    border: 1px solid rgba(250, 248, 244, 0.22);
+    border-radius: 26px;
+    color: #e4dfd6;
+    font-size: 12px;
+    font-weight: 300;
+    transition:
+      background 0.25s ease,
+      border-color 0.25s ease,
+      color 0.25s ease;
+  }
+  .footer-pill:hover {
+    background: rgba(250, 248, 244, 0.08);
+    border-color: #bba391;
+    color: #faf8f4;
+  }
+  .footer-phone-link {
+    color: #faf8f4;
+    border-bottom: 1px solid rgba(187, 163, 145, 0.6);
+    padding-bottom: 3px;
+    transition: color 0.2s ease;
+  }
+  .footer-phone-link:hover {
+    color: #bba391;
+  }
+
+  /* Riles con scroll horizontal (Categorías, Combina bien con) — scrollbar discreta */
+  .scroll-rail {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(26, 26, 26, 0.22) rgba(26, 26, 26, 0.06);
+  }
+  .scroll-rail::-webkit-scrollbar {
+    height: 4px;
+  }
+  .scroll-rail::-webkit-scrollbar-track {
+    background: rgba(26, 26, 26, 0.06);
+    border-radius: 2px;
+  }
+  .scroll-rail::-webkit-scrollbar-thumb {
+    background: rgba(26, 26, 26, 0.22);
+    border-radius: 2px;
+  }
 }

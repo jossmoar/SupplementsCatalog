@@ -6,6 +6,7 @@ import { BottomTabBar } from './components/BottomTabBar'
 import { Footer } from './components/Footer'
 import { Landing } from './pages/Landing'
 import { Login } from './pages/Login'
+import { ResetPassword } from './pages/ResetPassword'
 import { Catalog } from './pages/Catalog'
 import { ProductDetail } from './pages/ProductDetail'
 import { Search } from './pages/Search'
@@ -32,6 +33,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/catalogo" element={<Catalog />} />
           <Route path="/catalogo/:id" element={<ProductDetail />} />
           <Route path="/buscar" element={<Search />} />
