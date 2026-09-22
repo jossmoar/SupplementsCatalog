@@ -38,6 +38,10 @@
     "cta": "Ver catálogo",
     "buildRitual": "Arma tu ritual",
     "categories": "Categorías",
+    "categoryPrev": "Anterior",
+    "categoryNext": "Siguiente",
+    "categoryCount": "{{count}} productos",
+    "categoryCountOne": "1 producto",
     "searchPlaceholder": "Busca proteína, magnesio, colágeno…",
     "bannerEyebrow": "Destacado",
     "discover": "Descubrir",
@@ -46,6 +50,7 @@
     "add": "AGREGAR",
     "routineEyebrow": "Tu rutina",
     "routineTitle": "Arma tu ritual en 3 pasos",
+    "start": "Empezar",
     "step1Title": "Base",
     "step1Text": "Proteína y creatina para sostener tu entrenamiento.",
     "step2Title": "Diario",
@@ -68,7 +73,32 @@
     "createAccountBtn": "Crear cuenta",
     "noAccount": "¿No tenés cuenta? Registrate",
     "haveAccount": "¿Ya tenés cuenta? Iniciá sesión",
-    "error": "No se pudo completar. Revisá tus datos e intentá de nuevo."
+    "error": "No se pudo completar. Revisá tus datos e intentá de nuevo.",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "resetEyebrow": "Recuperar acceso",
+    "resetTitle": "Recuperar contraseña",
+    "sendResetLink": "Enviar enlace de recuperación",
+    "resetSent": "Te enviamos un correo con un enlace para restablecer tu contraseña. Revisá tu bandeja de entrada (y spam).",
+    "resetError": "No pudimos enviar el correo. Revisá que el correo sea correcto e intentá de nuevo.",
+    "backToLogin": "Volver a iniciar sesión"
+  },
+  "resetPassword": {
+    "eyebrow": "Recuperar acceso",
+    "title": "Crear nueva contraseña",
+    "verifying": "Verificando enlace…",
+    "passwordLabel": "Nueva contraseña",
+    "confirmPasswordLabel": "Confirmar contraseña",
+    "submit": "Cambiar contraseña",
+    "processing": "Actualizando…",
+    "mismatchError": "Las contraseñas no coinciden.",
+    "weakError": "La contraseña debe tener al menos 6 caracteres.",
+    "genericError": "No se pudo actualizar la contraseña. Intentá de nuevo.",
+    "successTitle": "¡Contraseña actualizada!",
+    "successMessage": "Tu contraseña se cambió con éxito. Ya podés iniciar sesión con tus nuevos datos.",
+    "goToLogin": "Iniciar sesión",
+    "invalidTitle": "Enlace inválido o vencido",
+    "invalidMessage": "Este enlace para restablecer tu contraseña ya no es válido. Solicitá uno nuevo.",
+    "requestNewLink": "Solicitar nuevo enlace"
   },
   "catalog": {
     "title": "Catálogo",
@@ -93,7 +123,20 @@
     "addToCart": "Agregar al carrito",
     "outOfStock": "Producto agotado por el momento.",
     "notFound": "No encontramos este producto",
-    "combinesWith": "Combina bien con"
+    "combinesWith": "Combina bien con",
+    "relatedEyebrow": "Sugerencias para ti",
+    "viewAllLink": "Ver todo",
+    "combineDisclaimer": "Estas combinaciones son sugerencias generales, no un consejo médico. Consulta a un profesional de salud antes de combinar suplementos, sobre todo si tomas medicamentos.",
+    "viewDetail": "VER DETALLE",
+    "addNamed": "Agregar {{name}}",
+    "addOne": "Agregar una unidad",
+    "removeOne": "Quitar una unidad",
+    "factCategory": "Categoría",
+    "factFor": "Para",
+    "factStock": "Disponibles",
+    "guarantee1": "Atención personalizada por WhatsApp",
+    "guarantee2": "Pago coordinado directo con la tienda",
+    "guarantee3": "Productos 100% sellados"
   },
   "cart": {
     "title": "Tu carrito",
@@ -140,7 +183,13 @@
     "saveError": "No se pudo guardar el producto. Revisá la conexión y probá de nuevo."
   },
   "footer": {
-    "tagline": "Bienestar, salud y confianza — hecho con cuidado."
+    "logoAlt": "Amaru Supplements — Fuerza en tu mejor versión",
+    "trust1": "Envío 24-48 h en el GAM",
+    "trust2": "Productos originales y sellados",
+    "trust3": "Pago seguro",
+    "contactPrefix": "Si tienes consultas puedes contactarnos por vía telefónica al",
+    "copyright": "© {{year}} Amaru Supplements · San José, Costa Rica",
+    "hours": "Atención: lun a sáb · 9 a 18 h"
   },
   "search": {
     "placeholder": "Buscar en RM",

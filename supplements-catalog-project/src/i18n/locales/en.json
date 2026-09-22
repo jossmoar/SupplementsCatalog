@@ -38,6 +38,10 @@
     "cta": "View catalog",
     "buildRitual": "Build your ritual",
     "categories": "Categories",
+    "categoryPrev": "Previous",
+    "categoryNext": "Next",
+    "categoryCount": "{{count}} products",
+    "categoryCountOne": "1 product",
     "searchPlaceholder": "Search protein, magnesium, collagen…",
     "bannerEyebrow": "Featured",
     "discover": "Discover",
@@ -46,6 +50,7 @@
     "add": "ADD",
     "routineEyebrow": "Your routine",
     "routineTitle": "Build your ritual in 3 steps",
+    "start": "Get started",
     "step1Title": "Base",
     "step1Text": "Protein and creatine to sustain your training.",
     "step2Title": "Daily",
@@ -68,7 +73,32 @@
     "createAccountBtn": "Create account",
     "noAccount": "Don't have an account? Sign up",
     "haveAccount": "Already have an account? Log in",
-    "error": "Something went wrong. Check your details and try again."
+    "error": "Something went wrong. Check your details and try again.",
+    "forgotPassword": "Forgot your password?",
+    "resetEyebrow": "Recover access",
+    "resetTitle": "Reset password",
+    "sendResetLink": "Send reset link",
+    "resetSent": "We sent you an email with a link to reset your password. Check your inbox (and spam folder).",
+    "resetError": "We couldn't send the email. Check that the address is correct and try again.",
+    "backToLogin": "Back to log in"
+  },
+  "resetPassword": {
+    "eyebrow": "Recover access",
+    "title": "Create new password",
+    "verifying": "Verifying link…",
+    "passwordLabel": "New password",
+    "confirmPasswordLabel": "Confirm password",
+    "submit": "Change password",
+    "processing": "Updating…",
+    "mismatchError": "Passwords don't match.",
+    "weakError": "Password must be at least 6 characters long.",
+    "genericError": "We couldn't update your password. Please try again.",
+    "successTitle": "Password updated!",
+    "successMessage": "Your password was changed successfully. You can now log in with your new credentials.",
+    "goToLogin": "Log in",
+    "invalidTitle": "Invalid or expired link",
+    "invalidMessage": "This password reset link is no longer valid. Request a new one.",
+    "requestNewLink": "Request new link"
   },
   "catalog": {
     "title": "Catalog",
@@ -93,7 +123,20 @@
     "addToCart": "Add to cart",
     "outOfStock": "Out of stock for now.",
     "notFound": "We couldn't find this product",
-    "combinesWith": "Combines well with"
+    "combinesWith": "Combines well with",
+    "relatedEyebrow": "Suggestions for you",
+    "viewAllLink": "View all",
+    "combineDisclaimer": "These combinations are general suggestions, not medical advice. Check with a health professional before combining supplements, especially if you take medication.",
+    "viewDetail": "VIEW DETAILS",
+    "addNamed": "Add {{name}}",
+    "addOne": "Add one",
+    "removeOne": "Remove one",
+    "factCategory": "Category",
+    "factFor": "For",
+    "factStock": "In stock",
+    "guarantee1": "Personalized support via WhatsApp",
+    "guarantee2": "Payment arranged directly with the store",
+    "guarantee3": "100% sealed products"
   },
   "cart": {
     "title": "Your order",
@@ -140,7 +183,13 @@
     "saveError": "Couldn't save the product. Check your connection and try again."
   },
   "footer": {
-    "tagline": "Wellness, health and trust — made with care."
+    "logoAlt": "Amaru Supplements — Strength in your best version",
+    "trust1": "24-48h delivery in the GAM area",
+    "trust2": "Original, sealed products",
+    "trust3": "Secure payment",
+    "contactPrefix": "If you have questions you can reach us by phone at",
+    "copyright": "© {{year}} Amaru Supplements · San José, Costa Rica",
+    "hours": "Hours: Mon–Sat · 9 am–6 pm"
   },
   "search": {
     "placeholder": "Search RM",
