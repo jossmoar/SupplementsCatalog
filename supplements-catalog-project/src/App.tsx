@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import AOS from 'aos'
 import { Navbar } from './components/Navbar'
-import { BottomTabBar } from './components/BottomTabBar'
 import { Footer } from './components/Footer'
 import { Landing } from './pages/Landing'
 import { Login } from './pages/Login'
@@ -63,10 +62,7 @@ function App() {
           />
         </Routes>
       </main>
-      <BottomTabBar />
-      <div className="hidden md:block">
-        <Footer />
-      </div>
+      <Footer />
     </div>
   )
 }

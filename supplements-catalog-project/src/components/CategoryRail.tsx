@@ -4,13 +4,14 @@ import type { Product } from '../types/product'
 import { PRODUCT_TYPE_LABELS, type ProductType } from '../types/product'
 import { useScrollRail } from '../hooks/useScrollRail'
 import { RailNavButton } from './RailNavButton'
+import creatinasImage from '../assets/category-creatinas.png'
 
 const CATEGORY_IMAGES: Record<ProductType, string> = {
   proteinas: 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?q=80&w=600&auto=format&fit=crop',
-  creatinas: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=600&auto=format&fit=crop',
+  creatinas: creatinasImage,
   vitaminas: 'https://images.unsplash.com/photo-1550572017-edd951b55104?q=80&w=600&auto=format&fit=crop',
-  colageno: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=600&auto=format&fit=crop',
-  bienestar: 'https://images.unsplash.com/photo-1519824145371-296894a0daa9?q=80&w=600&auto=format&fit=crop',
+  colageno: 'https://images.unsplash.com/photo-1519824145371-296894a0daa9?q=80&w=600&auto=format&fit=crop',
+  bienestar: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=600&auto=format&fit=crop',
   accesorios: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=600&auto=format&fit=crop',
 }
 
@@ -65,7 +66,7 @@ export function CategoryRail({ products }: Props) {
           overflowY: 'hidden',
           scrollBehavior: 'smooth',
           scrollSnapType: 'x mandatory',
-          padding: '0 4px 16px',
+          padding: '0 0 16px',
           margin: '0 -4px',
         }}
       >

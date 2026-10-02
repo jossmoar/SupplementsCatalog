@@ -5,6 +5,7 @@ import { useProducts } from '../hooks/useProducts'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import { money } from '../utils/whatsapp'
+import { getProductPrice } from '../utils/pricing'
 import { RelatedProductCard } from '../components/RelatedProductCard'
 import { getSuggestedProducts } from '../utils/productSuggestions'
 import { useScrollRail } from '../hooks/useScrollRail'
@@ -27,7 +28,9 @@ export function ProductDetail() {
   const [activeImage, setActiveImage] = useState(0)
   const [added, setAdded] = useState(false)
   const [openKey, setOpenKey] = useState<AccordionKey | null>('benefits')
+  const [selectedSize, setSelectedSize] = useState<string | undefined>(undefined)
   const imgRef = useRef<HTMLImageElement>(null)
+  const sizeInitializedFor = useRef<string | undefined>(undefined)
   const { railRef, canScrollLeft, canScrollRight, scrollByCards } = useScrollRail(RELATED_CARD_WIDTH, RELATED_GAP)
 
   const product = products.find((p) => p.id === id)
@@ -36,6 +39,15 @@ export function ProductDetail() {
     if (!product) return []
     return getSuggestedProducts(product, products, 4)
   }, [products, product])
+
+  // Selecciona el primer tamaño disponible por defecto cada vez que se entra a un producto distinto,
+  // sin resetear la selección del usuario si Firestore vuelve a emitir la misma lista de productos.
+  useEffect(() => {
+    if (product && sizeInitializedFor.current !== product.id) {
+      sizeInitializedFor.current = product.id
+      setSelectedSize(product.sizes?.[0]?.label)
+    }
+  }, [product])
 
   // Parallax suave de la imagen del panel sticky, respetando prefers-reduced-motion.
   useEffect(() => {
@@ -74,6 +86,7 @@ export function ProductDetail() {
   }
 
   const images = product.images
+  const currentPrice = getProductPrice(product, selectedSize)
   const crumb = `${t('nav.catalog').toUpperCase()} / ${t(`productType.${product.type}`).toUpperCase()}`
   const nameWords = product.name.split(' ')
   const titleLine1 = nameWords[0] ?? product.name
@@ -86,9 +99,6 @@ export function ProductDetail() {
     { value: product.presentation.split('·')[0].trim() || '—', label: t('product.presentation') },
   ]
 
-  const leadHeadline = product.benefits[0] ?? product.name
-  const leadBody = product.benefits.slice(1).join('. ')
-
   const accordionItems: Array<{ key: AccordionKey; title: string; body: string }> = [
     product.benefits.length > 0 && { key: 'benefits' as const, title: t('product.benefits'), body: product.benefits.join('\n') },
     product.usage && { key: 'usage' as const, title: t('product.usage'), body: product.usage },
@@ -100,7 +110,7 @@ export function ProductDetail() {
       navigate('/login')
       return
     }
-    addItem(product, qty)
+    addItem(product, qty, selectedSize)
     setAdded(true)
     setTimeout(() => setAdded(false), 2200)
   }
@@ -115,7 +125,7 @@ export function ProductDetail() {
   return (
     <div>
       <section
-        className="relative mx-auto grid grid-cols-[460px_minmax(0,1fr)] max-lg:block"
+        className="relative mx-auto grid grid-cols-[430px_minmax(0,1fr)] max-lg:block"
         style={{ maxWidth: 1120 }}
       >
         {/* Panel de imagen — sticky */}
@@ -163,7 +173,7 @@ export function ProductDetail() {
           </div>
           <div
             className="pdp-float pointer-events-none absolute rounded-full"
-            style={{ left: '12%', top: '16%', width: 88, height: 88, background: 'rgba(250,248,244,.55)' }}
+            style={{ left: '12%', top: '16%', width: 58, height: 58, background: 'rgba(250,248,244,.55)' }}
           />
 
           {images[activeImage] && (
@@ -171,7 +181,7 @@ export function ProductDetail() {
               ref={imgRef}
               src={images[activeImage]}
               alt={product.name}
-              className="relative block h-full max-h-125 w-full max-w-90 rounded-[999px_999px_14px_14px] object-cover object-[center_45%] shadow-[0_46px_80px_-38px_rgba(20,24,51,0.6)] max-lg:max-w-80"
+              className="relative block h-full max-h-117.5 w-full max-w-82.5 rounded-[999px_999px_14px_14px] object-cover object-[center_45%] shadow-[0_46px_80px_-38px_rgba(20,24,51,0.6)] max-lg:max-w-80"
             />
           )}
 
@@ -207,7 +217,7 @@ export function ProductDetail() {
         </div>
 
         {/* Contenido */}
-        <div className="pt-10 pl-12 pr-7 max-xl:px-11 max-xl:pt-14 max-lg:px-10 max-lg:pt-12 max-sm:px-6 max-sm:pt-9">
+        <div className="pt-10 pl-12  max-xl:px-11 max-xl:pt-14 max-lg:px-10 max-lg:pt-12 max-sm:px-6 max-sm:pt-9">
           <div>
             <h1
               data-aos="fade-up"
@@ -239,19 +249,8 @@ export function ProductDetail() {
               ))}
             </div>
 
-            <div data-aos="fade-up" className="mt-10 ">
-              <p className="font-serif" style={{ fontSize: 26, lineHeight: 1.35, color: '#141833' }}>
-                {leadHeadline}
-              </p>
-              {leadBody && (
-                <p className="mt-6.5" style={{ fontSize: 16, fontWeight: 300, lineHeight: 1.8, color: '#5D6472' }}>
-                  {leadBody}
-                </p>
-              )}
-            </div>
-
             {accordionItems.length > 0 && (
-              <div data-aos="fade-up" className="mt-14 pb-27.5">
+              <div data-aos="fade-up" className="pb-27.5">
                 {accordionItems.map((item, i) => {
                   const isOpen = openKey === item.key
                   const isLast = i === accordionItems.length - 1
@@ -261,7 +260,7 @@ export function ProductDetail() {
                         type="button"
                         onClick={() => setOpenKey(isOpen ? null : item.key)}
                         aria-expanded={isOpen}
-                        className="flex w-full items-center justify-between border-t border-t-[rgba(20,24,51,0.18)] py-6 text-left text-[16px]"
+                        className={`flex w-full items-center justify-between py-6 text-left text-[16px] ${i > 0 ? 'border-t border-t-[rgba(20,24,51,0.18)]' : ''}`}
                         style={{ color: '#141833' }}
                       >
                         <span>{item.title}</span>
@@ -285,8 +284,38 @@ export function ProductDetail() {
 
           <div className="pt-9">
             <div className="font-serif" style={{ fontSize: 36, lineHeight: 1, marginBottom: 10, color: '#141833' }}>
-              {money(product.price)}
+              {money(currentPrice)}
             </div>
+
+            {product.sizes && product.sizes.length > 0 && (
+              <div className="mb-6.5" data-aos="fade-up">
+                <div className="mb-3 uppercase" style={{ fontSize: 11, letterSpacing: '.18em', color: '#95847D' }}>
+                  {t('product.factSize')}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {product.sizes.map((s) => {
+                    const isSelected = s.label === selectedSize
+                    return (
+                      <button
+                        key={s.label}
+                        type="button"
+                        onClick={() => setSelectedSize(s.label)}
+                        aria-pressed={isSelected}
+                        className="rounded-full border px-4 py-2 text-[13px] transition-colors duration-200"
+                        style={{
+                          borderColor: isSelected ? '#141833' : 'rgba(20,24,51,.22)',
+                          background: isSelected ? '#141833' : 'transparent',
+                          color: isSelected ? '#F7F4EE' : '#141833',
+                        }}
+                      >
+                        {s.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
             {product.presentation && (
               <div className="border-b pb-6.5" style={{ fontSize: 14, fontWeight: 300, color: '#5D6472', borderColor: 'rgba(20,24,51,.14)' }}>
                 {product.presentation}
@@ -335,7 +364,7 @@ export function ProductDetail() {
                   borderRadius: 4,
                 }}
               >
-                {added ? t('product.added') : `${t('product.addToCart')} · ${money(product.price * qty)}`}
+                {added ? t('product.added') : `${t('product.addToCart')} · ${money(currentPrice * qty)}`}
               </button>
             </div>
 
@@ -359,7 +388,7 @@ export function ProductDetail() {
 
       {related.length > 0 && (
         <section style={{ background: '#FAF8F4' }} className="pt-14 pb-16">
-          <div className="mx-auto px-10 max-sm:px-5" style={{ maxWidth: 1120 }}>
+          <div className="mx-auto max-sm:px-5" style={{ maxWidth: 1110 }}>
             <header
               className="mb-9 flex flex-wrap items-baseline justify-between gap-3 pb-3.5"
               style={{ borderBottom: '1px solid rgba(26,26,26,.12)' }}

@@ -7,16 +7,20 @@ import {
   type ReactNode,
 } from 'react'
 import type { CartItem, Product } from '../types/product'
+import { getProductPrice } from '../utils/pricing'
 
 interface CartContextValue {
   items: CartItem[]
-  addItem: (product: Product, quantity: number) => void
-  removeItem: (productId: string) => void
-  setQuantity: (productId: string, quantity: number) => void
+  addItem: (product: Product, quantity: number, size?: string) => void
+  removeItem: (productId: string, size?: string) => void
+  setQuantity: (productId: string, quantity: number, size?: string) => void
   clear: () => void
   total: number
   count: number
 }
+
+const sameLine = (item: CartItem, productId: string, size?: string) =>
+  item.productId === productId && item.size === size
 
 const CartContext = createContext<CartContextValue | undefined>(undefined)
 const STORAGE_KEY = 'supplements-catalog-cart'
@@ -35,12 +39,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(items))
   }, [items])
 
-  const addItem = (product: Product, quantity: number) => {
+  const addItem = (product: Product, quantity: number, size?: string) => {
     setItems((prev) => {
-      const existing = prev.find((i) => i.productId === product.id)
+      const existing = prev.find((i) => sameLine(i, product.id, size))
       if (existing) {
         return prev.map((i) =>
-          i.productId === product.id ? { ...i, quantity: i.quantity + quantity } : i,
+          sameLine(i, product.id, size) ? { ...i, quantity: i.quantity + quantity } : i,
         )
       }
       return [
@@ -48,25 +52,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
         {
           productId: product.id,
           name: product.name,
-          price: product.price,
+          price: getProductPrice(product, size),
           image: product.images[0] ?? '',
           quantity,
+          size,
         },
       ]
     })
   }
 
-  const removeItem = (productId: string) => {
-    setItems((prev) => prev.filter((i) => i.productId !== productId))
+  const removeItem = (productId: string, size?: string) => {
+    setItems((prev) => prev.filter((i) => !sameLine(i, productId, size)))
   }
 
-  const setQuantity = (productId: string, quantity: number) => {
+  const setQuantity = (productId: string, quantity: number, size?: string) => {
     if (quantity <= 0) {
-      removeItem(productId)
+      removeItem(productId, size)
       return
     }
     setItems((prev) =>
-      prev.map((i) => (i.productId === productId ? { ...i, quantity } : i)),
+      prev.map((i) => (sameLine(i, productId, size) ? { ...i, quantity } : i)),
     )
   }
 

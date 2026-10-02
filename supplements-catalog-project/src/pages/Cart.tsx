@@ -56,7 +56,7 @@ export function Cart() {
         <div className="px-5">
           {items.map((item, i) => (
             <div
-              key={item.productId}
+              key={`${item.productId}-${item.size ?? ''}`}
               className="flex gap-3.5 border-b border-hairline py-4.5"
               data-aos="fade-up"
               data-aos-delay={i * 50}
@@ -68,18 +68,19 @@ export function Cart() {
               </div>
               <div className="flex flex-1 flex-col">
                 <p className="text-[13px] leading-snug text-ink">{item.name}</p>
+                {item.size && <p className="mt-0.5 text-[11.5px] text-taupe">{item.size}</p>}
                 <div className="mt-auto flex items-center justify-between">
                   <div className="flex items-center border border-beige-dark">
                     <button
                       className="flex h-7.5 w-7.5 items-center justify-center text-ink"
-                      onClick={() => setQuantity(item.productId, item.quantity - 1)}
+                      onClick={() => setQuantity(item.productId, item.quantity - 1, item.size)}
                     >
                       −
                     </button>
                     <span className="w-5.5 text-center text-[12.5px] text-ink">{item.quantity}</span>
                     <button
                       className="flex h-7.5 w-7.5 items-center justify-center text-ink"
-                      onClick={() => setQuantity(item.productId, item.quantity + 1)}
+                      onClick={() => setQuantity(item.productId, item.quantity + 1, item.size)}
                     >
                       +
                     </button>
@@ -88,7 +89,7 @@ export function Cart() {
                 </div>
               </div>
               <button
-                onClick={() => removeItem(item.productId)}
+                onClick={() => removeItem(item.productId, item.size)}
                 className="self-start text-taupe hover:text-red-700"
                 aria-label={t('cart.remove')}
               >

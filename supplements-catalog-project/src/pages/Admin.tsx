@@ -10,11 +10,15 @@ import { useTranslation } from 'react-i18next'
 import { db } from '../firebase/config'
 import { uploadProductImage } from '../utils/cloudinary'
 import { useProducts } from '../hooks/useProducts'
+import { ComboBox } from '../components/ComboBox'
 import {
   GENDER_LABELS,
+  PRESENTATION_OPTIONS,
   PRODUCT_TYPE_LABELS,
+  SIZE_OPTIONS,
   type Gender,
   type Product,
+  type ProductSize,
   type ProductType,
 } from '../types/product'
 import { money } from '../utils/whatsapp'
@@ -26,6 +30,7 @@ const emptyForm = {
   price: '',
   benefits: '',
   presentation: '',
+  sizes: [] as ProductSize[],
   usage: '',
   stock: '',
   recommended: false,
@@ -35,19 +40,41 @@ export function Admin() {
   const { t } = useTranslation()
   const { products } = useProducts()
   const [form, setForm] = useState(emptyForm)
+  const [sizeInput, setSizeInput] = useState('')
+  const [sizePriceInput, setSizePriceInput] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
+  const sizeOptions = SIZE_OPTIONS[form.type]
+
+  const addSize = () => {
+    const label = sizeInput.trim()
+    const price = Number(sizePriceInput)
+    if (!label || !sizePriceInput || Number.isNaN(price) || price <= 0) return
+    if (form.sizes.some((s) => s.label === label)) return
+    setForm({ ...form, sizes: [...form.sizes, { label, price }] })
+    setSizeInput('')
+    setSizePriceInput('')
+  }
+
+  const removeSize = (label: string) => {
+    setForm({ ...form, sizes: form.sizes.filter((s) => s.label !== label) })
+  }
+
   const resetForm = () => {
     setForm(emptyForm)
+    setSizeInput('')
+    setSizePriceInput('')
     setFile(null)
     setEditingId(null)
   }
 
   const handleEdit = (p: Product) => {
     setEditingId(p.id)
+    setSizeInput('')
+    setSizePriceInput('')
     setForm({
       name: p.name,
       gender: p.gender,
@@ -55,6 +82,7 @@ export function Admin() {
       price: String(p.price),
       benefits: p.benefits.join('\n'),
       presentation: p.presentation,
+      sizes: p.sizes ?? [],
       usage: p.usage,
       stock: String(p.stock),
       recommended: !!p.recommended,
@@ -69,6 +97,13 @@ export function Admin() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setError('')
+
+    const usesSizes = !!sizeOptions
+    if (usesSizes && form.sizes.length === 0) {
+      setError(t('admin.sizesRequiredError'))
+      return
+    }
+
     setSaving(true)
     try {
       let imageUrl = ''
@@ -80,9 +115,10 @@ export function Admin() {
         name: form.name,
         gender: form.gender,
         type: form.type,
-        price: Number(form.price),
+        price: usesSizes ? form.sizes[0].price : Number(form.price),
         benefits: form.benefits.split('\n').filter(Boolean),
         presentation: form.presentation,
+        sizes: usesSizes ? form.sizes : [],
         usage: form.usage,
         stock: Number(form.stock),
         recommended: form.recommended,
@@ -125,15 +161,17 @@ export function Admin() {
           onChange={(e) => setForm({ ...form, name: e.target.value })}
           required
         />
-        <input
-          className="input-field"
-          type="number"
-          step="0.01"
-          placeholder={t('admin.pricePlaceholder')}
-          value={form.price}
-          onChange={(e) => setForm({ ...form, price: e.target.value })}
-          required
-        />
+        {!sizeOptions && (
+          <input
+            className="input-field"
+            type="number"
+            step="0.01"
+            placeholder={t('admin.pricePlaceholder')}
+            value={form.price}
+            onChange={(e) => setForm({ ...form, price: e.target.value })}
+            required
+          />
+        )}
         <select
           className="input-field"
           value={form.gender}
@@ -156,12 +194,80 @@ export function Admin() {
             </option>
           ))}
         </select>
-        <input
+        <select
           className="input-field"
-          placeholder={t('admin.presentationPlaceholder')}
           value={form.presentation}
           onChange={(e) => setForm({ ...form, presentation: e.target.value })}
-        />
+          required
+        >
+          <option value="" disabled>
+            {t('admin.presentationPlaceholder')}
+          </option>
+          {PRESENTATION_OPTIONS.map((opt) => (
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
+          ))}
+        </select>
+        {sizeOptions && (
+          <div className="md:col-span-2">
+            <label className="text-xs uppercase tracking-widest text-taupe">
+              {t('admin.sizesLabel')}
+            </label>
+            <div className="mt-1 flex gap-2">
+              <ComboBox
+                className="input-field flex-1"
+                options={sizeOptions}
+                value={sizeInput}
+                onChange={setSizeInput}
+                placeholder={t('admin.sizePlaceholder')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    addSize()
+                  }
+                }}
+              />
+              <input
+                className="input-field w-36"
+                type="number"
+                step="0.01"
+                placeholder={t('admin.sizePricePlaceholder')}
+                value={sizePriceInput}
+                onChange={(e) => setSizePriceInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    addSize()
+                  }
+                }}
+              />
+              <button type="button" onClick={addSize} className="btn-secondary px-5">
+                {t('admin.addSize')}
+              </button>
+            </div>
+            {form.sizes.length > 0 && (
+              <div className="mt-2.5 flex flex-wrap gap-2">
+                {form.sizes.map((s) => (
+                  <span
+                    key={s.label}
+                    className="flex items-center gap-1.5 rounded-full border border-beige-dark px-3 py-1.5 text-xs text-ink"
+                  >
+                    {s.label} — {money(s.price)}
+                    <button
+                      type="button"
+                      onClick={() => removeSize(s.label)}
+                      aria-label={t('admin.removeSize', { size: s.label })}
+                      className="text-taupe hover:text-red-700"
+                    >
+                      ✕
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
         <input
           className="input-field"
           type="number"

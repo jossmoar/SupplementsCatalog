@@ -8,7 +8,9 @@
     "logout": "Cerrar sesión",
     "login": "Iniciar sesión",
     "subtitle": "Suplementos",
-    "search": "Buscar"
+    "search": "Buscar",
+    "menu": "Menú",
+    "close": "Cerrar"
   },
   "common": {
     "loading": "Cargando…",
@@ -134,6 +136,7 @@
     "factCategory": "Categoría",
     "factFor": "Para",
     "factStock": "Disponibles",
+    "factSize": "Tamaño",
     "guarantee1": "Atención personalizada por WhatsApp",
     "guarantee2": "Pago coordinado directo con la tienda",
     "guarantee3": "Productos 100% sellados"
@@ -165,7 +168,13 @@
     "title": "Gestionar productos",
     "namePlaceholder": "Nombre del producto",
     "pricePlaceholder": "Precio (CRC)",
-    "presentationPlaceholder": "Presentación (ej. 2 lb, 60 cápsulas)",
+    "presentationPlaceholder": "Selecciona la presentación",
+    "sizesLabel": "Tamaños disponibles (cada uno con su propio precio)",
+    "sizePlaceholder": "Elegí o escribí un tamaño",
+    "sizePricePlaceholder": "Precio (CRC)",
+    "addSize": "Agregar",
+    "removeSize": "Quitar el tamaño {{size}}",
+    "sizesRequiredError": "Agregá al menos un tamaño con su precio antes de guardar.",
     "stockPlaceholder": "Stock disponible",
     "benefitsPlaceholder": "Beneficios principales (uno por línea)",
     "usagePlaceholder": "Modo de uso",

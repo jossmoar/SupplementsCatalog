@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useProducts } from '../hooks/useProducts'
-import { money } from '../utils/whatsapp'
-import { PRODUCT_TYPE_LABELS, type ProductType } from '../types/product'
 import { CategoryRail } from '../components/CategoryRail'
 
 export function Landing() {
@@ -34,119 +32,15 @@ export function Landing() {
 
   return (
     <div className="bg-beige ">
-      <section className="px-5 pt-4.5 md:hidden" data-aos="fade-up">
-        <Link
-          to="/buscar"
-          className="flex items-center gap-2.5 rounded-xs bg-cream px-3.5 py-3.25 text-taupe"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <circle cx="11" cy="11" r="7" />
-            <path d="M16.5 16.5 21 21" />
-          </svg>
-          <span className="text-[13px]">{t('landing.searchPlaceholder')}</span>
-        </Link>
-      </section>
-
-      <section className="scrollbar-none flex gap-2 overflow-x-auto px-5 pt-4 pb-0.5 md:hidden">
-        {(Object.keys(PRODUCT_TYPE_LABELS) as ProductType[]).map((type) => (
-          <Link
-            key={type}
-            to={`/catalogo?tipo=${type}`}
-            className="flex-none rounded-full border border-beige-dark bg-cream/55 px-4 py-2.25 text-xs text-ink"
-          >
-            {t(`productType.${type}`)}
-          </Link>
-        ))}
-      </section>
-
-      {banner && (
-        <section className="px-5 pt-5 md:hidden" data-aos="fade-up">
-          <Link
-            to={`/catalogo/${banner.id}`}
-            className="relative flex min-h-[190px] overflow-hidden bg-cream"
-          >
-            <div className="flex flex-1 flex-col justify-center gap-2.5 p-5.5">
-              <span className="text-[9.5px] tracking-[0.2em] text-olive uppercase">{t('landing.bannerEyebrow')}</span>
-              <span className="font-serif text-[26px] leading-[1.1] text-ink">{banner.name}</span>
-              {banner.benefits[0] && <span className="text-xs text-ink/55">{banner.benefits[0]}</span>}
-              <span className="mt-1 inline-flex self-start rounded-xs bg-ink px-5 py-2.75 text-xs text-cream">
-                {t('landing.discover')}
-              </span>
-            </div>
-            <div className="w-37.5 bg-beige">
-              {banner.images[0] && (
-                <img src={banner.images[0]} alt={banner.name} className="h-full w-full object-cover" />
-              )}
-            </div>
-          </Link>
-        </section>
-      )}
-
-      {featured.length > 0 && (
-        <section className="pt-7.5 md:hidden">
-          <div className="flex items-baseline justify-between px-5">
-            <span className="font-serif text-[23px] text-ink">{t('landing.essentials')}</span>
-            <Link to="/catalogo" className="text-[11px] tracking-wide text-taupe uppercase">
-              {t('landing.viewAll')}
-            </Link>
-          </div>
-          <div className="scrollbar-none flex gap-3.5 overflow-x-auto px-5 pt-4 pb-1.5">
-            {featured.map((p, i) => (
-              <div key={p.id} className="w-43.5 flex-none" data-aos="fade-up" data-aos-delay={i * 60}>
-                <div className="flex flex-col gap-2.5 bg-cream p-3">
-                  <Link to={`/catalogo/${p.id}`} className="aspect-square overflow-hidden bg-beige">
-                    {p.images[0] && <img src={p.images[0]} alt={p.name} className="h-full w-full object-cover" />}
-                  </Link>
-                  <p className="min-h-8.5 text-[12.5px] leading-snug text-ink">{p.name}</p>
-                  {p.benefits[0] && <p className="text-[11px] text-olive">{p.benefits[0]}</p>}
-                  <div className="mt-0.5 flex items-center justify-between">
-                    <span className="text-sm text-ink">{money(p.price)}</span>
-                    <Link
-                      to={`/catalogo/${p.id}`}
-                      className="bg-ink px-3 py-2 text-[11px] tracking-wide text-cream"
-                    >
-                      {t('landing.add')}
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      <section className="mt-7 bg-cream p-7 md:hidden" data-aos="fade-up">
-        <span className="text-[9.5px] tracking-[0.2em] text-taupe uppercase">{t('landing.routineEyebrow')}</span>
-        <p className="mt-2 font-serif text-[26px] text-ink">{t('landing.routineTitle')}</p>
-        <div className="mt-4.5 flex flex-col">
-          {steps.map((n) => (
-            <div key={n} className="flex gap-3.5 border-t border-hairline py-3.5">
-              <span className="w-5 font-serif text-lg text-olive">{n}</span>
-              <div className="flex-1">
-                <p className="text-[13.5px] text-ink">{t(`landing.step${n}Title`)}</p>
-                <p className="mt-1 text-xs leading-snug text-ink/55">{t(`landing.step${n}Text`)}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Desktop-only: Categorías first */}
-      <section className="hidden pt-11 pb-12 md:block" style={{ background: '#EFE7DC' }}>
+      <section className="pt-11 pb-12" style={{ background: '#EFE7DC' }}>
         <CategoryRail products={products} />
       </section>
 
-      {/* Desktop-only hero */}
-      {/* Desktop-only hero — Hero B: una sola superficie tan, sin costura 50/50 */}
-      <section className="hidden md:block" style={{ background: '#BBA391' }}>
+      {/* Hero — Hero B: una sola superficie tan, sin costura 50/50 */}
+      <section className="overflow-hidden" style={{ background: '#BBA391' }}>
         <div
-          className="mx-auto grid items-center"
-          style={{
-            maxWidth: 1120,
-            gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 400px)',
-            gap: 88,
-            padding: '104px 40px 112px',
-          }}
+          className="mx-auto grid grid-cols-1 items-center gap-10 px-5 py-14 md:grid-cols-[minmax(0,1fr)_minmax(0,400px)] md:gap-22 md:px-10 md:pt-26 md:pb-28"
+          style={{ maxWidth: 1120 }}
         >
           <div style={{ maxWidth: 620 }}>
             <span
@@ -157,8 +51,8 @@ export function Landing() {
               {t('landing.eyebrow')}
             </span>
             <h1
-              className="font-serif"
-              style={{ fontWeight: 400, fontSize: 54, lineHeight: 1.1, color: '#141833', margin: '0 0 26px' }}
+              className="font-serif text-[36px] md:text-[54px]"
+              style={{ fontWeight: 400, lineHeight: 1.1, color: '#141833', margin: '0 0 26px' }}
               data-aos="fade-up"
               data-aos-delay="100"
             >
@@ -175,15 +69,17 @@ export function Landing() {
             >
               {t('landing.subtitle')}
             </p>
-            <div className="flex" style={{ gap: 14 }} data-aos="fade-up" data-aos-delay="300">
+            <div className="flex flex-col gap-3 md:flex-row md:gap-3.5" data-aos="fade-up" data-aos-delay="300">
               <Link
                 to="/catalogo"
+                className="text-center"
                 style={{ background: '#141833', color: '#F7F4EE', padding: '11px 34px', fontSize: 15, borderRadius: 4 }}
               >
                 {t('landing.cta')}
               </Link>
               <a
                 href="#ritual"
+                className="text-center"
                 style={{
                   border: '1px solid rgba(20,24,51,.35)',
                   padding: '11px 34px',
@@ -239,8 +135,18 @@ export function Landing() {
             )}
             {heroCaption && (
               <div
-                className="relative flex items-start"
-                style={{ marginTop: 22, gap: 12, fontSize: 13, letterSpacing: '.06em', color: '#4A4640', minHeight: 40 }}
+                className="absolute flex items-start"
+                style={{
+                  top: '100%',
+                  left: 0,
+                  right: 0,
+                  marginTop: 22,
+                  gap: 12,
+                  fontSize: 13,
+                  letterSpacing: '.06em',
+                  color: '#4A4640',
+                  minHeight: 40,
+                }}
               >
                 <span style={{ width: 26, height: 1, marginTop: 9, flexShrink: 0, background: 'rgba(20,24,51,.35)' }} />
                 <span
@@ -259,12 +165,11 @@ export function Landing() {
         </div>
       </section>
 
-      {/* Desktop-only rutina — 3 columnas horizontales, sin imagen */}
-      <section id="ritual" className="hidden scroll-mt-24 md:block" style={{ background: '#EAE3D9' }}>
-        <div style={{ maxWidth: 1120, margin: '0 auto', padding: '72px 40px 80px' }}>
+      {/* Rutina — 3 pasos, en columna en móvil y horizontal desde md */}
+      <section id="ritual" className="scroll-mt-24" style={{ background: '#EAE3D9' }}>
+        <div className="mx-auto px-5 pt-14 pb-16 md:px-10 md:pt-18 md:pb-20" style={{ maxWidth: 1120 }}>
           <div
-            className="flex items-end justify-between"
-            style={{ gap: 40, marginBottom: 24 }}
+            className="mb-6 flex flex-col items-start gap-4 md:flex-row md:items-end md:justify-between"
             data-aos="fade-up"
           >
             <div>
@@ -274,7 +179,7 @@ export function Landing() {
               >
                 {t('landing.routineEyebrow')}
               </span>
-              <h2 className="font-serif" style={{ fontWeight: 400, fontSize: 44, color: '#141833', margin: 0 }}>
+              <h2 className="font-serif text-[30px] md:text-[44px]" style={{ fontWeight: 400, color: '#141833', margin: 0 }}>
                 {t('landing.routineTitle')}
               </h2>
             </div>
@@ -286,7 +191,7 @@ export function Landing() {
             </Link>
           </div>
 
-          <div className="grid" style={{ gridTemplateColumns: 'repeat(3, minmax(0,1fr))', gap: 60 }}>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-15">
             {steps.map((n, i) => (
               <div
                 key={n}
@@ -307,9 +212,9 @@ export function Landing() {
         </div>
       </section>
 
-      <section className="hidden bg-cream md:block">
-        <div className="px-14 py-18 text-center" data-aos="fade-up">
-          <p className="mx-auto max-w-xl font-serif text-[32px] leading-[1.3] text-ink italic">
+      <section className="bg-cream">
+        <div className="px-6 py-12 text-center md:px-14 md:py-18" data-aos="fade-up">
+          <p className="mx-auto max-w-xl font-serif text-[22px] leading-[1.35] text-ink italic md:text-[30px] md:leading-[1.3]">
             {t('landing.quote')}
           </p>
           <p className="mt-5 text-[11px] tracking-[0.16em] text-taupe uppercase">
