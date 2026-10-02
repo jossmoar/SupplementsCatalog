@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useProducts } from '../hooks/useProducts'
-import { ProductCard } from '../components/ProductCard'
 import { ProductCircleCard } from '../components/ProductCircleCard'
 import { PRODUCT_TYPE_LABELS, type Gender, type ProductType } from '../types/product'
 
@@ -71,60 +70,36 @@ export function Catalog() {
 
   return (
     <div className="pb-10">
-      {/* Mobile */}
-      <div className="md:hidden">
-        <div className="flex items-center px-5 pt-3.5 pb-3">
-          <h1 className="flex-1 font-serif text-[21px] text-ink">{t('catalog.title')}</h1>
-        </div>
-
-        <div className="scrollbar-none flex gap-2 overflow-x-auto border-b border-hairline px-5 pt-1 pb-3.5">
-          {categoryChip(null, !type)}
-          {(Object.keys(PRODUCT_TYPE_LABELS) as ProductType[]).map((pt) => categoryChip(pt, type === pt))}
-        </div>
-
-        <div className="scrollbar-none flex gap-2 overflow-x-auto px-5 pt-3">
-          {GENDER_TABS.map((g) => (
-            <button
-              key={g}
-              onClick={() => pickGender(g)}
-              className={`flex-none rounded-full border px-3 py-1.5 text-[11px] ${
-                gender === g ? 'border-ink text-ink' : 'border-beige-dark text-taupe'
-              }`}
-            >
-              {t(`gender.${g}`)}
-            </button>
-          ))}
-        </div>
-
-        <div className="flex items-center justify-between px-5 pt-3.5">
-          <span className="text-[11.5px] tracking-wide text-taupe">
-            {t(filtered.length === 1 ? 'catalog.countOne' : 'catalog.count', { count: filtered.length })}
-          </span>
-          {sortSelect}
-        </div>
-
-        {loading ? (
-          <p className="mt-16 text-center text-taupe">{t('catalog.loading')}</p>
-        ) : filtered.length === 0 ? (
-          <p className="mt-16 text-center text-taupe">{t('catalog.empty')}</p>
-        ) : (
-          <div className="mt-4.5 grid grid-cols-2 gap-x-3.5 gap-y-5 px-5">
-            {filtered.map((p, i) => (
-              <ProductCard key={p.id} product={p} aosDelay={(i % 4) * 60} />
-            ))}
-          </div>
-        )}
+      <div className="mx-auto max-w-360 px-5 pt-5 pb-3 md:px-14 md:pt-11 md:pb-5">
+        <p className="text-[11px] tracking-[0.14em] text-taupe uppercase md:hidden">{t('catalog.breadcrumb')}</p>
+        <h1 className="mt-2 font-serif text-[28px] text-ink md:mt-3 md:text-[44px]">{t('catalog.title')}</h1>
       </div>
 
-      {/* Desktop */}
-      <div className="hidden md:block">
-        <div className="mx-auto max-w-[1440px] px-14 pt-11 pb-5">
-          <p className="text-[11px] tracking-[0.14em] text-taupe uppercase">{t('catalog.breadcrumb')}</p>
-          <h1 className="mt-3 font-serif text-[44px] text-ink">{t('catalog.title')}</h1>
-        </div>
+      <div className="mx-auto max-w-360 px-5 pb-10 md:grid md:grid-cols-[210px_1fr] md:gap-14 md:px-14 md:pb-18">
+        <div>
+          {/* Filtros — chips con scroll horizontal en móvil */}
+          <div className="md:hidden">
+            <div className="scrollbar-none flex gap-2 overflow-x-auto pb-3">
+              {categoryChip(null, !type)}
+              {(Object.keys(PRODUCT_TYPE_LABELS) as ProductType[]).map((pt) => categoryChip(pt, type === pt))}
+            </div>
+            <div className="scrollbar-none flex gap-2 overflow-x-auto pb-5">
+              {GENDER_TABS.map((g) => (
+                <button
+                  key={g}
+                  onClick={() => pickGender(g)}
+                  className={`flex-none rounded-full border px-3 py-1.5 text-[11px] ${
+                    gender === g ? 'border-ink text-ink' : 'border-beige-dark text-taupe'
+                  }`}
+                >
+                  {t(`gender.${g}`)}
+                </button>
+              ))}
+            </div>
+          </div>
 
-        <div className="mx-auto grid max-w-[1440px] grid-cols-[210px_1fr] gap-14 px-14 pb-18">
-          <div>
+          {/* Filtros — sidebar fijo desde md, sin tocar */}
+          <div className="hidden md:block">
             <p className="border-b border-hairline-strong pb-2.5 text-[10px] tracking-[0.2em] text-taupe uppercase">
               {t('catalog.category')}
             </p>
@@ -164,37 +139,28 @@ export function Catalog() {
               ))}
             </div>
           </div>
+        </div>
 
-          <div>
-            <div
-              className="flex items-center justify-between"
-              style={{
-                fontSize: 14,
-                color: '#5D6472',
-                paddingBottom: 22,
-                borderBottom: '1px solid rgba(20,24,51,.12)',
-                marginBottom: 48,
-              }}
-            >
-              <span>{t(filtered.length === 1 ? 'catalog.countOne' : 'catalog.count', { count: filtered.length })}</span>
-              {sortSelect}
-            </div>
-
-            {loading ? (
-              <p className="mt-16 text-center text-taupe">{t('catalog.loading')}</p>
-            ) : filtered.length === 0 ? (
-              <p className="mt-16 text-center text-taupe">{t('catalog.empty')}</p>
-            ) : (
-              <div
-                className="grid"
-                style={{ gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '84px 52px' }}
-              >
-                {filtered.map((p, i) => (
-                  <ProductCircleCard key={p.id} product={p} aosDelay={(i % 3) * 60} />
-                ))}
-              </div>
-            )}
+        <div>
+          <div
+            className="mb-8 flex items-center justify-between md:mb-12"
+            style={{ fontSize: 13, color: '#5D6472', paddingBottom: 6, borderBottom: '1px solid rgba(20,24,51,.12)' }}
+          >
+            <span>{t(filtered.length === 1 ? 'catalog.countOne' : 'catalog.count', { count: filtered.length })}</span>
+            {sortSelect}
           </div>
+
+          {loading ? (
+            <p className="mt-16 text-center text-taupe">{t('catalog.loading')}</p>
+          ) : filtered.length === 0 ? (
+            <p className="mt-16 text-center text-taupe">{t('catalog.empty')}</p>
+          ) : (
+            <div className="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 md:gap-x-13 md:gap-y-21">
+              {filtered.map((p, i) => (
+                <ProductCircleCard key={p.id} product={p} aosDelay={(i % 3) * 60} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -24,9 +24,10 @@ export async function buildWhatsAppOrderLink(
     }),
   )
 
-  const lines = verifiedItems.map(
-    (i) => `• ${i.name} x${i.quantity} — ${money(i.price * i.quantity)}`,
-  )
+  const lines = verifiedItems.map((i) => {
+    const sizeLabel = i.size ? ` (${i.size})` : ''
+    return `• ${i.name}${sizeLabel} x${i.quantity} — ${money(i.price * i.quantity)}`
+  })
   const total = verifiedItems.reduce((sum, i) => sum + i.price * i.quantity, 0)
 
   const message = [

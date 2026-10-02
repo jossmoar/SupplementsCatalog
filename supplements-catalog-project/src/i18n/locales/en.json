@@ -8,7 +8,9 @@
     "logout": "Log out",
     "login": "Log in",
     "subtitle": "Supplements",
-    "search": "Search"
+    "search": "Search",
+    "menu": "Menu",
+    "close": "Close"
   },
   "common": {
     "loading": "Loading…",
@@ -134,6 +136,7 @@
     "factCategory": "Category",
     "factFor": "For",
     "factStock": "In stock",
+    "factSize": "Size",
     "guarantee1": "Personalized support via WhatsApp",
     "guarantee2": "Payment arranged directly with the store",
     "guarantee3": "100% sealed products"
@@ -165,7 +168,13 @@
     "title": "Manage products",
     "namePlaceholder": "Product name",
     "pricePlaceholder": "Price (CRC)",
-    "presentationPlaceholder": "Presentation (e.g. 2 lb, 60 capsules)",
+    "presentationPlaceholder": "Select a presentation",
+    "sizesLabel": "Available sizes (each with its own price)",
+    "sizePlaceholder": "Pick or type a size",
+    "sizePricePlaceholder": "Price (CRC)",
+    "addSize": "Add",
+    "removeSize": "Remove size {{size}}",
+    "sizesRequiredError": "Add at least one size with a price before saving.",
     "stockPlaceholder": "Available stock",
     "benefitsPlaceholder": "Main benefits (one per line)",
     "usagePlaceholder": "How to use",

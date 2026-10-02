@@ -5,6 +5,7 @@ import { useProducts } from '../hooks/useProducts'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import { money } from '../utils/whatsapp'
+import { PRODUCT_TYPE_LABELS, type ProductType } from '../types/product'
 
 const normalize = (s: string) =>
   s
@@ -12,12 +13,7 @@ const normalize = (s: string) =>
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
 
-const SUGGESTIONS = [
-  { label: 'Proteína', term: 'proteina' },
-  { label: 'Sueño', term: 'magnesio' },
-  { label: 'Piel', term: 'colageno' },
-  { label: 'Post-entreno', term: 'creatina' },
-]
+const CATEGORY_SUGGESTIONS = Object.keys(PRODUCT_TYPE_LABELS) as ProductType[]
 
 export function Search() {
   const { t } = useTranslation()
@@ -26,15 +22,35 @@ export function Search() {
   const { addItem } = useCart()
   const { user } = useAuth()
   const [q, setQ] = useState('')
+  const [selectedTypes, setSelectedTypes] = useState<Set<ProductType>>(new Set())
 
   const nq = normalize(q.trim())
+  const hasCategoryFilter = selectedTypes.size > 0
+  const hasActiveFilter = nq !== '' || hasCategoryFilter
+
+  const toggleType = (type: ProductType) => {
+    setSelectedTypes((prev) => {
+      const next = new Set(prev)
+      if (next.has(type)) next.delete(type)
+      else next.add(type)
+      return next
+    })
+  }
 
   const results = useMemo(() => {
-    if (nq === '') return products.slice(0, 4)
-    return products.filter((p) =>
-      normalize(`${p.name} ${p.benefits.join(' ')} ${p.type} ${p.presentation}`).includes(nq),
-    )
-  }, [products, nq])
+    // Entre categorías seleccionadas es OR (cualquiera de ellas); con el texto buscado es AND.
+    let list = products
+    if (hasCategoryFilter) {
+      list = list.filter((p) => selectedTypes.has(p.type))
+    }
+    if (nq !== '') {
+      list = list.filter((p) =>
+        normalize(`${p.name} ${p.benefits.join(' ')} ${p.type} ${p.presentation}`).includes(nq),
+      )
+      return list
+    }
+    return hasCategoryFilter ? list : list.slice(0, 4)
+  }, [products, nq, selectedTypes, hasCategoryFilter])
 
   const handleAdd = (productId: string) => {
     if (!user) {
@@ -69,13 +85,13 @@ export function Search() {
       <div className="mt-5.5">
         <p className="eyebrow">{t('search.suggestions')}</p>
         <div className="mt-3 flex flex-wrap gap-2">
-          {SUGGESTIONS.map((s) => (
+          {CATEGORY_SUGGESTIONS.map((type) => (
             <button
-              key={s.label}
-              onClick={() => setQ(s.term)}
-              className="rounded-full border border-beige-dark px-3.5 py-2 text-xs text-ink"
+              key={type}
+              onClick={() => toggleType(type)}
+              className={`chip ${selectedTypes.has(type) ? 'chip-active' : ''}`}
             >
-              {s.label}
+              {t(`productType.${type}`)}
             </button>
           ))}
         </div>
@@ -83,7 +99,7 @@ export function Search() {
 
       <div className="mt-6.5">
         <p className="eyebrow">
-          {nq === ''
+          {!hasActiveFilter
             ? t('search.popular')
             : t(results.length === 1 ? 'search.oneResult' : 'search.results', { count: results.length })}
         </p>
@@ -108,7 +124,7 @@ export function Search() {
             </div>
           ))}
         </div>
-        {nq !== '' && results.length === 0 && (
+        {hasActiveFilter && results.length === 0 && (
           <div className="py-10 text-center">
             <p className="font-serif text-[22px] text-ink">{t('search.empty')}</p>
             <p className="mt-2 text-[12.5px] text-taupe">{t('search.emptyHint')}</p>
