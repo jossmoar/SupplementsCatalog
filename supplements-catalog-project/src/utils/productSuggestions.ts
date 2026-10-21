@@ -14,7 +14,6 @@ function pickBestProduct(
   const candidates = allProducts.filter(
     (p) =>
       !excludeIds.has(p.id) &&
-      p.stock > 0 &&
       PRODUCT_TYPE_TO_COMPAT[p.type] === category,
   )
   if (candidates.length === 0) return null

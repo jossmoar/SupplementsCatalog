@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useProducts } from '../hooks/useProducts'
 import { CategoryRail } from '../components/CategoryRail'
+import { presentationLabel } from '../utils/presentation'
 
 export function Landing() {
   const { t } = useTranslation()
@@ -25,7 +26,7 @@ export function Landing() {
 
   const heroProduct = heroSlides[heroIndex] ?? banner
   const heroCaption = heroProduct
-    ? [heroProduct.name, heroProduct.presentation].filter(Boolean).join(' · ')
+    ? [heroProduct.name, presentationLabel(heroProduct.presentation, t)].filter(Boolean).join(' · ')
     : ''
 
   const steps = [1, 2, 3] as const

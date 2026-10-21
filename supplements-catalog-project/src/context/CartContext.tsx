@@ -7,20 +7,20 @@ import {
   type ReactNode,
 } from 'react'
 import type { CartItem, Product } from '../types/product'
-import { getProductPrice } from '../utils/pricing'
+import { getFlavorImage, getProductPrice } from '../utils/pricing'
 
 interface CartContextValue {
   items: CartItem[]
-  addItem: (product: Product, quantity: number, size?: string) => void
-  removeItem: (productId: string, size?: string) => void
-  setQuantity: (productId: string, quantity: number, size?: string) => void
+  addItem: (product: Product, quantity: number, size?: string, flavor?: string) => void
+  removeItem: (productId: string, size?: string, flavor?: string) => void
+  setQuantity: (productId: string, quantity: number, size?: string, flavor?: string) => void
   clear: () => void
   total: number
   count: number
 }
 
-const sameLine = (item: CartItem, productId: string, size?: string) =>
-  item.productId === productId && item.size === size
+const sameLine = (item: CartItem, productId: string, size?: string, flavor?: string) =>
+  item.productId === productId && item.size === size && item.flavor === flavor
 
 const CartContext = createContext<CartContextValue | undefined>(undefined)
 const STORAGE_KEY = 'supplements-catalog-cart'
@@ -39,12 +39,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(items))
   }, [items])
 
-  const addItem = (product: Product, quantity: number, size?: string) => {
+  const addItem = (product: Product, quantity: number, size?: string, flavor?: string) => {
     setItems((prev) => {
-      const existing = prev.find((i) => sameLine(i, product.id, size))
+      const existing = prev.find((i) => sameLine(i, product.id, size, flavor))
       if (existing) {
         return prev.map((i) =>
-          sameLine(i, product.id, size) ? { ...i, quantity: i.quantity + quantity } : i,
+          sameLine(i, product.id, size, flavor) ? { ...i, quantity: i.quantity + quantity } : i,
         )
       }
       return [
@@ -53,25 +53,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
           productId: product.id,
           name: product.name,
           price: getProductPrice(product, size),
-          image: product.images[0] ?? '',
+          image: getFlavorImage(product, flavor),
           quantity,
           size,
+          flavor,
         },
       ]
     })
   }
 
-  const removeItem = (productId: string, size?: string) => {
-    setItems((prev) => prev.filter((i) => !sameLine(i, productId, size)))
+  const removeItem = (productId: string, size?: string, flavor?: string) => {
+    setItems((prev) => prev.filter((i) => !sameLine(i, productId, size, flavor)))
   }
 
-  const setQuantity = (productId: string, quantity: number, size?: string) => {
+  const setQuantity = (productId: string, quantity: number, size?: string, flavor?: string) => {
     if (quantity <= 0) {
-      removeItem(productId, size)
+      removeItem(productId, size, flavor)
       return
     }
     setItems((prev) =>
-      prev.map((i) => (sameLine(i, productId, size) ? { ...i, quantity } : i)),
+      prev.map((i) => (sameLine(i, productId, size, flavor) ? { ...i, quantity } : i)),
     )
   }
 

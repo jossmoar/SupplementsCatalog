@@ -12,7 +12,6 @@ function makeProduct(overrides: Partial<Product> & Pick<Product, 'id' | 'type'>)
     benefits: [],
     presentation: '1 unidad',
     usage: '',
-    stock: 10,
     ...overrides,
   }
 }
@@ -57,13 +56,6 @@ describe('getSuggestedProducts', () => {
     const current = catalog.find((p) => p.id === 'creatina-1')!
     const suggestions = getSuggestedProducts(current, catalog, 4)
     expect(suggestions.length).toBeLessThanOrEqual(4)
-  })
-
-  it('excluye productos sin stock', () => {
-    const noStock = catalog.map((p) => (p.id === 'proteina-1' ? { ...p, stock: 0 } : p))
-    const current = noStock.find((p) => p.id === 'creatina-1')!
-    const suggestions = getSuggestedProducts(current, noStock)
-    expect(suggestions.some((s) => s.id === 'proteina-1')).toBe(false)
   })
 
   it('usa el respaldo universal (multivitamínico + omega-3) para categorías fuera de la matriz', () => {

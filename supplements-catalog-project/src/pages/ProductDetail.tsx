@@ -5,7 +5,8 @@ import { useProducts } from '../hooks/useProducts'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import { money } from '../utils/whatsapp'
-import { getProductPrice } from '../utils/pricing'
+import { getDefaultFlavor, getDefaultSize, getProductPrice } from '../utils/pricing'
+import { presentationLabel } from '../utils/presentation'
 import { RelatedProductCard } from '../components/RelatedProductCard'
 import { getSuggestedProducts } from '../utils/productSuggestions'
 import { useScrollRail } from '../hooks/useScrollRail'
@@ -29,6 +30,7 @@ export function ProductDetail() {
   const [added, setAdded] = useState(false)
   const [openKey, setOpenKey] = useState<AccordionKey | null>('benefits')
   const [selectedSize, setSelectedSize] = useState<string | undefined>(undefined)
+  const [selectedFlavor, setSelectedFlavor] = useState<string | undefined>(undefined)
   const imgRef = useRef<HTMLImageElement>(null)
   const sizeInitializedFor = useRef<string | undefined>(undefined)
   const { railRef, canScrollLeft, canScrollRight, scrollByCards } = useScrollRail(RELATED_CARD_WIDTH, RELATED_GAP)
@@ -40,12 +42,17 @@ export function ProductDetail() {
     return getSuggestedProducts(product, products, 4)
   }, [products, product])
 
-  // Selecciona el primer tamaño disponible por defecto cada vez que se entra a un producto distinto,
+  // Selecciona por defecto el tamaño más barato y el primer sabor cada vez que se entra a un producto distinto,
   // sin resetear la selección del usuario si Firestore vuelve a emitir la misma lista de productos.
   useEffect(() => {
     if (product && sizeInitializedFor.current !== product.id) {
       sizeInitializedFor.current = product.id
-      setSelectedSize(product.sizes?.[0]?.label)
+      setSelectedSize(getDefaultSize(product))
+      const flavor = getDefaultFlavor(product)
+      setSelectedFlavor(flavor)
+      const flavorImage = product.flavors?.find((f) => f.name === flavor)?.image
+      const imageIndex = flavorImage ? product.images.indexOf(flavorImage) : -1
+      setActiveImage(imageIndex >= 0 ? imageIndex : 0)
     }
   }, [product])
 
@@ -87,6 +94,7 @@ export function ProductDetail() {
 
   const images = product.images
   const currentPrice = getProductPrice(product, selectedSize)
+  const presentation = presentationLabel(product.presentation, t)
   const crumb = `${t('nav.catalog').toUpperCase()} / ${t(`productType.${product.type}`).toUpperCase()}`
   const nameWords = product.name.split(' ')
   const titleLine1 = nameWords[0] ?? product.name
@@ -95,14 +103,14 @@ export function ProductDetail() {
   const facts: Array<{ value: string; label: string }> = [
     { value: t(`productType.${product.type}`), label: t('product.factCategory') },
     { value: t(`gender.${product.gender}`), label: t('product.factFor') },
-    { value: String(product.stock), label: t('product.factStock') },
-    { value: product.presentation.split('·')[0].trim() || '—', label: t('product.presentation') },
+    ...(selectedSize ? [{ value: selectedSize, label: t('product.factSize') }] : []),
+    { value: presentation.split('·')[0].trim() || '—', label: t('product.presentation') },
   ]
 
   const accordionItems: Array<{ key: AccordionKey; title: string; body: string }> = [
     product.benefits.length > 0 && { key: 'benefits' as const, title: t('product.benefits'), body: product.benefits.join('\n') },
     product.usage && { key: 'usage' as const, title: t('product.usage'), body: product.usage },
-    product.presentation && { key: 'presentation' as const, title: t('product.presentation'), body: product.presentation },
+    presentation && { key: 'presentation' as const, title: t('product.presentation'), body: presentation },
   ].filter((item): item is { key: AccordionKey; title: string; body: string } => !!item)
 
   const handleAdd = () => {
@@ -110,7 +118,7 @@ export function ProductDetail() {
       navigate('/login')
       return
     }
-    addItem(product, qty, selectedSize)
+    addItem(product, qty, selectedSize, selectedFlavor)
     setAdded(true)
     setTimeout(() => setAdded(false), 2200)
   }
@@ -189,11 +197,11 @@ export function ProductDetail() {
             {crumb}
           </div>
 
-          {product.presentation && (
+          {presentation && (
             <div className="absolute flex items-center" style={{ left: 44, bottom: 40, gap: 14, color: '#5D6472' }}>
               <span style={{ width: 44, height: 1, background: 'rgba(20,24,51,.3)' }} />
               <span className="uppercase" style={{ fontSize: 12, letterSpacing: '.26em' }}>
-                {product.presentation}
+                {presentation}
               </span>
             </div>
           )}
@@ -316,9 +324,47 @@ export function ProductDetail() {
               </div>
             )}
 
-            {product.presentation && (
+            {product.flavors && product.flavors.length > 0 && (
+              <div className="mb-6.5" data-aos="fade-up">
+                <div className="mb-3 uppercase" style={{ fontSize: 11, letterSpacing: '.18em', color: '#95847D' }}>
+                  {t('product.flavor')}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {product.flavors.map((f) => {
+                    const isSelected = f.name === selectedFlavor
+                    return (
+                      <button
+                        key={f.name}
+                        type="button"
+                        onClick={() => {
+                          setSelectedFlavor(f.name)
+                          const index = f.image ? images.indexOf(f.image) : -1
+                          if (index >= 0) setActiveImage(index)
+                        }}
+                        aria-pressed={isSelected}
+                        className="rounded-full border px-4 py-2 text-[13px] transition-colors duration-200"
+                        style={{
+                          borderColor: isSelected ? '#141833' : 'rgba(20,24,51,.22)',
+                          background: isSelected ? '#141833' : 'transparent',
+                          color: isSelected ? '#F7F4EE' : '#141833',
+                        }}
+                      >
+                        {f.name}
+                      </button>
+                    )
+                  })}
+                </div>
+                {product.flavors.length > 1 && (
+                  <p className="mt-3" style={{ fontSize: 13, fontWeight: 300, lineHeight: 1.6, color: '#5D6472' }}>
+                    {t('product.flavorAvailability')}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {presentation && (
               <div className="border-b pb-6.5" style={{ fontSize: 14, fontWeight: 300, color: '#5D6472', borderColor: 'rgba(20,24,51,.14)' }}>
-                {product.presentation}
+                {presentation}
               </div>
             )}
 
@@ -341,7 +387,7 @@ export function ProductDetail() {
                 </span>
                 <button
                   type="button"
-                  onClick={() => setQty((q) => Math.min(product.stock || 99, q + 1))}
+                  onClick={() => setQty((q) => q + 1)}
                   aria-label={t('product.addOne')}
                   className="flex items-center justify-center"
                   style={{ width: 40, height: 40, fontSize: 19, color: '#141833' }}
@@ -352,8 +398,7 @@ export function ProductDetail() {
               <button
                 type="button"
                 onClick={handleAdd}
-                disabled={product.stock <= 0}
-                className="flex-1 transition-colors duration-300 disabled:opacity-40"
+                className="flex-1 transition-colors duration-300"
                 style={{
                   height: 56,
                   border: 'none',
@@ -367,12 +412,6 @@ export function ProductDetail() {
                 {added ? t('product.added') : `${t('product.addToCart')} · ${money(currentPrice * qty)}`}
               </button>
             </div>
-
-            {product.stock <= 0 && (
-              <p className="mt-3 text-xs" style={{ color: '#95847D' }}>
-                {t('product.outOfStock')}
-              </p>
-            )}
 
             <div className="mt-8.5 flex flex-col gap-3" style={{ fontSize: 14, fontWeight: 300, color: '#5D6472' }}>
               {[t('product.guarantee1'), t('product.guarantee2'), t('product.guarantee3')].map((g) => (

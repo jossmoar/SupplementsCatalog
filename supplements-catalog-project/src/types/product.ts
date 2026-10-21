@@ -28,6 +28,12 @@ export interface ProductSize {
   price: number
 }
 
+/** Sabor disponible de un producto. `image` es la URL de una de las fotos del producto. */
+export interface ProductFlavor {
+  name: string
+  image?: string
+}
+
 export interface Product {
   id: string
   name: string
@@ -38,8 +44,8 @@ export interface Product {
   benefits: string[]
   presentation: string
   usage: string
-  stock: number
   sizes?: ProductSize[]
+  flavors?: ProductFlavor[]
   recommended?: boolean
   createdAt?: number
 }
@@ -50,11 +56,18 @@ export const SIZE_OPTIONS: Partial<Record<ProductType, string[]>> = {
   creatinas: ['100 g', '200 g', '300 g', '400 g', '500 g', '600 g', '700 g'],
 }
 
-export const PRESENTATION_OPTIONS = [
-  'Dosis en polvo',
-  'Dosis en cápsula',
-  'Bebida en presentación individual',
-] as const
+export type PresentationKey = 'powder' | 'capsule' | 'drink'
+
+const SUPPLEMENT_PRESENTATIONS: PresentationKey[] = ['powder', 'capsule', 'drink']
+
+/** Presentaciones que aplican a cada categoría. Los accesorios no llevan presentación. */
+export const PRESENTATION_OPTIONS: Partial<Record<ProductType, PresentationKey[]>> = {
+  proteinas: SUPPLEMENT_PRESENTATIONS,
+  creatinas: SUPPLEMENT_PRESENTATIONS,
+  vitaminas: SUPPLEMENT_PRESENTATIONS,
+  colageno: SUPPLEMENT_PRESENTATIONS,
+  bienestar: SUPPLEMENT_PRESENTATIONS,
+}
 
 export interface CartItem {
   productId: string
@@ -63,4 +76,5 @@ export interface CartItem {
   image: string
   quantity: number
   size?: string
+  flavor?: string
 }

@@ -5,6 +5,8 @@ import { useProducts } from '../hooks/useProducts'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import { money } from '../utils/whatsapp'
+import { getProductPrice, getDefaultFlavor, getDefaultSize, needsFlavorChoice } from '../utils/pricing'
+import { presentationLabel } from '../utils/presentation'
 import { PRODUCT_TYPE_LABELS, type ProductType } from '../types/product'
 
 const normalize = (s: string) =>
@@ -45,12 +47,12 @@ export function Search() {
     }
     if (nq !== '') {
       list = list.filter((p) =>
-        normalize(`${p.name} ${p.benefits.join(' ')} ${p.type} ${p.presentation}`).includes(nq),
+        normalize(`${p.name} ${p.benefits.join(' ')} ${p.type} ${presentationLabel(p.presentation, t)}`).includes(nq),
       )
       return list
     }
     return hasCategoryFilter ? list : list.slice(0, 4)
-  }, [products, nq, selectedTypes, hasCategoryFilter])
+  }, [products, nq, selectedTypes, hasCategoryFilter, t])
 
   const handleAdd = (productId: string) => {
     if (!user) {
@@ -58,7 +60,13 @@ export function Search() {
       return
     }
     const product = products.find((p) => p.id === productId)
-    if (product) addItem(product, 1)
+    if (!product) return
+    // Con varios sabores hay que elegir en el detalle.
+    if (needsFlavorChoice(product)) {
+      navigate(`/catalogo/${product.id}`)
+      return
+    }
+    addItem(product, 1, getDefaultSize(product), getDefaultFlavor(product))
   }
 
   return (
@@ -111,8 +119,8 @@ export function Search() {
               </Link>
               <Link to={`/catalogo/${p.id}`} className="flex-1">
                 <div className="text-[13px] leading-snug text-ink">{p.name}</div>
-                <div className="mt-1 text-[11.5px] text-taupe">{p.presentation}</div>
-                <div className="mt-1.75 text-[13.5px] text-ink">{money(p.price)}</div>
+                <div className="mt-1 text-[11.5px] text-taupe">{presentationLabel(p.presentation, t)}</div>
+                <div className="mt-1.75 text-[13.5px] text-ink">{money(getProductPrice(p))}</div>
               </Link>
               <button
                 onClick={() => handleAdd(p.id)}

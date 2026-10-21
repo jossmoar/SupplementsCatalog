@@ -2,7 +2,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import type { Product } from '../types/product'
 import { money } from '../utils/whatsapp'
-import { getProductPrice } from '../utils/pricing'
+import { getProductPrice, getDefaultFlavor, getDefaultSize, needsFlavorChoice } from '../utils/pricing'
+import { presentationLabel } from '../utils/presentation'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 
@@ -18,9 +19,15 @@ export function ProductCircleCard({ product, aosDelay = 0 }: Props) {
   const navigate = useNavigate()
 
   const detailUrl = `/catalogo/${product.id}`
-  const defaultSize = product.sizes?.[0]?.label
-  const quantity = items.find((i) => i.productId === product.id && i.size === defaultSize)?.quantity ?? 0
-  const meta = [t(`productType.${product.type}`), product.presentation].filter(Boolean).join(' · ')
+  const defaultSize = getDefaultSize(product)
+  const defaultFlavor = getDefaultFlavor(product)
+  // Con varios sabores no se agrega desde la tarjeta: el "+" lleva al detalle para elegir sabor.
+  const chooseFlavor = needsFlavorChoice(product)
+  const quantity = chooseFlavor
+    ? 0
+    : (items.find((i) => i.productId === product.id && i.size === defaultSize && i.flavor === defaultFlavor)
+        ?.quantity ?? 0)
+  const meta = [t(`productType.${product.type}`), presentationLabel(product.presentation, t)].filter(Boolean).join(' · ')
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -29,13 +36,17 @@ export function ProductCircleCard({ product, aosDelay = 0 }: Props) {
       navigate('/login')
       return
     }
-    addItem(product, 1, defaultSize)
+    if (chooseFlavor) {
+      navigate(detailUrl)
+      return
+    }
+    addItem(product, 1, defaultSize, defaultFlavor)
   }
 
   const handleStep = (e: React.MouseEvent, delta: number) => {
     e.preventDefault()
     e.stopPropagation()
-    setQuantity(product.id, quantity + delta, defaultSize)
+    setQuantity(product.id, quantity + delta, defaultSize, defaultFlavor)
   }
 
   return (

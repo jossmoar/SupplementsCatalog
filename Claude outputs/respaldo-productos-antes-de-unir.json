@@ -1,0 +1,79 @@
+[
+  {
+    "id": "AcXUKMZOCuW84TJR2Y2y",
+    "name": "Cellucor C4 RTD Grape ",
+    "type": "bienestar",
+    "gender": "unisex",
+    "price": 1950,
+    "presentation": "Bebida",
+    "images": ["https://res.cloudinary.com/xsvb1kt4/image/upload/v1787801264/productos/h0xq6tdb1vkegqzfje4p.webp"],
+    "benefits": [
+      "El Cellucor C4 RTD es una bebida tipo pre-entreno. La fórmula puede variar según la versión, pero la presentación RTD que se comercializa en Costa Rica contiene cafeína, beta-alanina, citrulina y vitaminas del grupo B.",
+      "¿Qué beneficios busca aportar?",
+      "⚡ Más energía y alerta: principalmente por la cafeína.",
+      "🏋️ Mejor rendimiento durante el entrenamiento: puede ayudarte a sentir más capacidad para mantener la intensidad.",
+      "🔥 Mayor resistencia muscular: la beta-alanina puede ayudar con esfuerzos intensos y repetidos; su efecto se relaciona más con el uso acumulado que con una sola toma.",
+      "💪 Mejor “pump”: la citrulina está orientada a favorecer el flujo sanguíneo durante el ejercicio.",
+      "🧠 Mayor concentración: la cafeína puede aumentar temporalmente el estado de alerta.",
+      "🥤 Practicidad: ya viene preparado, por lo que no necesitas mezclar polvo."
+    ],
+    "usage": "Toma 1 lata antes de entrenar, normalmente unos 20–30 minutos antes.\nNo necesitas mezclarlo con agua: viene listo para tomar.\nNo excedas la cantidad indicada en la etiqueta, especialmente porque contiene cafeína.\nEvita tomarlo cerca de la hora de dormir, ya que la cafeína puede dificultar el sueño.\nNo es necesario tomarlo todos los días; puedes reservarlo para entrenamientos en los que necesites un impulso de energía.",
+    "recommended": false,
+    "stock": 6,
+    "createdAt": 1787801264422
+  },
+  {
+    "id": "a7Quwh8UiEphoFLhUACg",
+    "name": "Cellucor C4 RTD Watermelon",
+    "type": "bienestar",
+    "gender": "unisex",
+    "price": 1950,
+    "presentation": "Bebida",
+    "images": ["https://res.cloudinary.com/xsvb1kt4/image/upload/v1787801323/productos/a7strwcm9ssygzthqufm.webp"],
+    "benefits": "(mismos beneficios que Cellucor C4 RTD Grape)",
+    "usage": "(mismo modo de uso que Cellucor C4 RTD Grape)",
+    "recommended": false,
+    "stock": 5,
+    "createdAt": 1787801323854
+  },
+  {
+    "id": "pH16hWRtdXp1uMbpbzHt",
+    "name": "Cellucor C4 RTD Frozen Bombsicle",
+    "type": "bienestar",
+    "gender": "unisex",
+    "price": 1950,
+    "presentation": "Bebida",
+    "images": ["https://res.cloudinary.com/xsvb1kt4/image/upload/v1787801106/productos/jrzqvwwghzgsrdqifdz8.webp"],
+    "benefits": "(mismos beneficios que Cellucor C4 RTD Grape)",
+    "usage": "(mismo modo de uso que Cellucor C4 RTD Grape)",
+    "recommended": false,
+    "stock": 9,
+    "createdAt": 1787801106759
+  },
+  {
+    "id": "bV8Y2lMcJru1B6i4IiRq",
+    "name": "Optimum Nutrition Whey Gold Standard",
+    "type": "proteinas",
+    "gender": "unisex",
+    "price": 28000,
+    "sizes": [{ "label": "3 lb", "price": 28000 }, { "label": "1 lb", "price": 12000 }],
+    "presentation": "Dosis en polvo - 2 lbs",
+    "images": ["https://res.cloudinary.com/xsvb1kt4/image/upload/v1790301658/productos/ibeaqf8kiwnigp5u3ask.png"],
+    "recommended": true,
+    "stock": 2,
+    "createdAt": 1790301658620
+  },
+  {
+    "id": "b5uuAiPfAlYAVyeAIW4A",
+    "name": "Superior 14 Whey Core Protein",
+    "type": "proteinas",
+    "gender": "unisex",
+    "price": 25900,
+    "presentation": "Dosis en polvo - 26 servidas",
+    "images": ["https://res.cloudinary.com/xsvb1kt4/image/upload/v1787804688/productos/yitboazz9xmglrngftz2.jpg"],
+    "usage": "Generalmente se mezcla la porción indicada en el envase con agua o leche y se agita hasta disolver.",
+    "recommended": true,
+    "stock": 4,
+    "createdAt": 1787804688067
+  }
+]

@@ -1,7 +1,8 @@
 import { doc, getDoc } from 'firebase/firestore'
 import { db, WHATSAPP_NUMBER } from '../firebase/config'
 import i18n from '../i18n/config'
-import type { CartItem } from '../types/product'
+import type { CartItem, Product } from '../types/product'
+import { getProductPrice } from './pricing'
 
 const money = (n: number) =>
   n.toLocaleString('es-CR', { style: 'currency', currency: 'CRC' })
@@ -10,7 +11,8 @@ const money = (n: number) =>
  * Antes de armar el mensaje, vuelve a leer el precio real de cada producto
  * directo desde Firestore (no el que quedó guardado en el navegador).
  * Así, aunque alguien manipule el carrito local, el pedido que llega por
- * WhatsApp siempre refleja el precio verdadero que puso el admin.
+ * WhatsApp siempre refleja el precio verdadero que puso el admin
+ * (el del tamaño elegido, si el producto maneja tamaños).
  */
 export async function buildWhatsAppOrderLink(
   items: CartItem[],
@@ -19,14 +21,17 @@ export async function buildWhatsAppOrderLink(
   const verifiedItems = await Promise.all(
     items.map(async (item) => {
       const snap = await getDoc(doc(db, 'products', item.productId))
-      const realPrice = snap.exists() ? (snap.data().price as number) : item.price
+      const realPrice = snap.exists()
+        ? getProductPrice({ id: snap.id, ...snap.data() } as Product, item.size)
+        : item.price
       return { ...item, price: realPrice }
     }),
   )
 
   const lines = verifiedItems.map((i) => {
-    const sizeLabel = i.size ? ` (${i.size})` : ''
-    return `• ${i.name}${sizeLabel} x${i.quantity} — ${money(i.price * i.quantity)}`
+    const variant = [i.size, i.flavor].filter(Boolean).join(', ')
+    const variantLabel = variant ? ` (${variant})` : ''
+    return `• ${i.name}${variantLabel} x${i.quantity} — ${money(i.price * i.quantity)}`
   })
   const total = verifiedItems.reduce((sum, i) => sum + i.price * i.quantity, 0)
 

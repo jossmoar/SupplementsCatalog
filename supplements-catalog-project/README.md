@@ -61,7 +61,7 @@ los primeros productos ahí.
 
 ## 5. Publicar las reglas de seguridad de Firestore
 
-Estas reglas son las que impiden que un cliente modifique precios o stock
+Estas reglas son las que impiden que un cliente modifique precios
 desde el navegador — solo la cuenta admin puede escribir productos.
 
 1. Instalá la CLI de Firebase una sola vez: `npm install -g firebase-tools`
@@ -95,8 +95,8 @@ el repo de GitHub a Vercel y cada push a `main` se publica solo.
 1. Iniciá sesión con `jmonteroa1@ucenfotec.ac.cr`.
 2. Andá a **Admin** en el menú.
 3. Completá nombre, precio, género (Unisex/Hombres/Mujeres), categoría,
-   presentación, beneficios, modo de uso, stock y subí una foto (se sube a
-   Cloudinary automáticamente).
+   presentación, tamaños con su precio (proteínas y creatinas), beneficios,
+   modo de uso y subí las fotos (se suben a Cloudinary automáticamente).
 4. El producto aparece al instante en el catálogo para todos los visitantes.
 
 ## Cómo funciona el pedido por WhatsApp

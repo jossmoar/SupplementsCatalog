@@ -2,7 +2,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import type { Product } from '../types/product'
 import { money } from '../utils/whatsapp'
-import { getProductPrice } from '../utils/pricing'
+import { getProductPrice, getDefaultFlavor, getDefaultSize, needsFlavorChoice } from '../utils/pricing'
+import { presentationLabel } from '../utils/presentation'
 import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 
@@ -17,8 +18,8 @@ export function RelatedProductCard({ product }: Props) {
   const navigate = useNavigate()
 
   const detailUrl = `/catalogo/${product.id}`
-  const defaultSize = product.sizes?.[0]?.label
-  const meta = [t(`productType.${product.type}`), product.presentation].filter(Boolean).join(' · ')
+  const defaultSize = getDefaultSize(product)
+  const meta = [t(`productType.${product.type}`), presentationLabel(product.presentation, t)].filter(Boolean).join(' · ')
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -27,7 +28,12 @@ export function RelatedProductCard({ product }: Props) {
       navigate('/login')
       return
     }
-    addItem(product, 1, defaultSize)
+    // Con varios sabores hay que elegir en el detalle.
+    if (needsFlavorChoice(product)) {
+      navigate(detailUrl)
+      return
+    }
+    addItem(product, 1, defaultSize, getDefaultFlavor(product))
   }
 
   return (

@@ -79,7 +79,7 @@ Necesitás tener [Node.js](https://nodejs.org) instalado (versión 20 o más rec
 
 ## Paso 5 — Publicar las reglas de seguridad de Firestore
 
-Estas reglas impiden que alguien manipule precios o stock desde el navegador — solo tu hermana (con el correo admin) puede escribir productos.
+Estas reglas impiden que alguien manipule precios desde el navegador — solo tu hermana (con el correo admin) puede escribir productos.
 
 1. Instalá la CLI de Firebase una sola vez:
 
